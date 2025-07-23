@@ -5,6 +5,7 @@ import API_BASE_URL from '../utils/api';
 import { FaRegEdit } from 'react-icons/fa';
 import { MdOutlineDeleteOutline } from 'react-icons/md';
 import { IoSaveOutline } from 'react-icons/io5';
+import { api } from 'axiosApi';
 
 const NewsManager = () => {
   const [title, setTitle] = useState('');
@@ -20,7 +21,7 @@ const NewsManager = () => {
 
   const fetchNews = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/news`);
+      const res = await api.get(`/news`);
       setNewsList(res.data);
     } catch (err) {
       console.error('Error fetching news:', err);
@@ -30,7 +31,7 @@ const NewsManager = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${API_BASE_URL}/api/news`, { title, link });
+      await api.post(`/news`, { title, link });
       Swal.fire('Success', 'News added successfully!', 'success');
       setTitle('');
       setLink('');
@@ -51,7 +52,7 @@ const NewsManager = () => {
 
     if (result.isConfirmed) {
       try {
-        await axios.delete(`${API_BASE_URL}/api/news/${id}`);
+        await api.delete(`/news/${id}`);
         Swal.fire('Deleted!', 'News deleted.', 'success');
         fetchNews();
       } catch (err) {
@@ -72,6 +73,7 @@ const NewsManager = () => {
         title: editingTitle,
         link: editingLink,
       });
+      // await api.put(`/news/${id}`, { title: editingTitle, link: editingLink });
       Swal.fire('Updated!', 'News updated.', 'success');
       setEditingId(null);
       setEditingTitle('');
