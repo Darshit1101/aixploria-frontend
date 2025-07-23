@@ -23,8 +23,9 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled ? "bg-black/95 shadow-lg" : "bg-black/50"
-        }`}
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+        scrolled ? "bg-black/95 shadow-lg" : "bg-black"
+      }`}
     >
       <div className="ml-5 px-4 sm:px-6 lg:px-14 xl:px-12">
         <div className="flex items-center justify-between h-16">
@@ -47,7 +48,18 @@ const Navbar = () => {
               onClick={scrollToTop}
               className="text-white hover:text-gray-300 flex items-center"
             >
-              <svg height="20" fill="white" viewBox="0 0 28 28" width="20" xmlns="http://www.w3.org/2000/svg"><g id="Layer_2" data-name="Layer 2"><path d="m20 7a5 5 0 1 0 5 5 5.006 5.006 0 0 0 -5-5zm2 6h-1v1a1 1 0 0 1 -2 0v-1h-1a1 1 0 0 1 0-2h1v-1a1 1 0 0 1 2 0v1h1a1 1 0 0 1 0 2z"/><path d="m13 12a6.948 6.948 0 0 1 8-6.92v-.13a3.955 3.955 0 0 0 -3.95-3.95h-10.1a3.955 3.955 0 0 0 -3.95 3.95v21.05a1 1 0 0 0 1.659.752l7.341-6.423 7.341 6.423a1 1 0 0 0 1.659-.752v-7.08a6.948 6.948 0 0 1 -8-6.92z"/></g></svg>
+              <svg
+                height="20"
+                fill="white"
+                viewBox="0 0 28 28"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g id="Layer_2" data-name="Layer 2">
+                  <path d="m20 7a5 5 0 1 0 5 5 5.006 5.006 0 0 0 -5-5zm2 6h-1v1a1 1 0 0 1 -2 0v-1h-1a1 1 0 0 1 0-2h1v-1a1 1 0 0 1 2 0v1h1a1 1 0 0 1 0 2z" />
+                  <path d="m13 12a6.948 6.948 0 0 1 8-6.92v-.13a3.955 3.955 0 0 0 -3.95-3.95h-10.1a3.955 3.955 0 0 0 -3.95 3.95v21.05a1 1 0 0 0 1.659.752l7.341-6.423 7.341 6.423a1 1 0 0 0 1.659-.752v-7.08a6.948 6.948 0 0 1 -8-6.92z" />
+                </g>
+              </svg>
             </Link>
             <Link
               to="/fulllist"
@@ -71,10 +83,8 @@ const Navbar = () => {
               AI Tutorials
             </Link>
             <div className="relative group">
-              <button
-                className="text-white hover:text-gray-300 text-sm lg:text-base flex items-center"
-              >
-                AI Tutorials
+              <button className="text-white hover:text-gray-300 text-sm lg:text-base flex items-center">
+                +More
                 <ChevronDown className="ml-1 h-4 w-4" />
               </button>
 
@@ -101,14 +111,14 @@ const Navbar = () => {
                   >
                     AI NEWS 2025
                   </Link>
-                   <Link
+                  <Link
                     to="/bonus&extras"
                     onClick={scrollToTop}
                     className="block px-4 py-2 text-sm text-white hover:bg-[#FA9021]"
                   >
                     Bonus & Extras
                   </Link>
-                   <Link
+                  <Link
                     to="/submit"
                     onClick={scrollToTop}
                     className="block px-4 py-2 text-sm text-white hover:bg-[#FA9021]"
@@ -118,21 +128,7 @@ const Navbar = () => {
                 </div>
               </div>
             </div>
-
-
-            {/* Dropdown */}
-
-            <Link
-              to="/aitutorials"
-              onClick={scrollToTop}
-              className="flex items-center text-white hover:text-gray-300 text-sm lg:text-base"
-            >
-              +More
-
-            </Link>
-
           </div>
-
 
           {/* Mobile menu button */}
           <div className="md:hidden">
@@ -153,8 +149,9 @@ const Navbar = () => {
 
       {/* Mobile menu dropdown */}
       <div
-        className={`md:hidden bg-black px-4 sm:px-6 pb-4 transition-all duration-300 ease-in-out ${isOpen ? "block opacity-100" : "hidden opacity-0"
-          }`}
+        className={`md:hidden bg-black px-4 sm:px-6 pb-4 transition-all duration-300 ease-in-out ${
+          isOpen ? "block opacity-100" : "hidden opacity-0"
+        }`}
       >
         <div className="space-y-1">
           <Link
@@ -209,10 +206,7 @@ const Navbar = () => {
               More
               <ChevronDown className="h-4 w-4" />
             </button>
-            <div
-              id="mobile-submenu"
-              className="hidden pl-6 space-y-1 mt-1"
-            >
+            <div id="mobile-submenu" className="hidden pl-6 space-y-1 mt-1">
               <Link
                 to="/about"
                 onClick={() => {

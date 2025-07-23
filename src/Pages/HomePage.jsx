@@ -2,7 +2,7 @@ import React from "react";
 import Home from "../Component/Home";
 import TopTools from "../Component/TopTools";
 import SomeNewAiCategories from "../Component/SomeNewAiCategories";
-import ExploreMoreAi from "../Component/ExploreMoreAi";
+import ExploreMoreAi from "../Component/BonusExplore";
 import GuideAi from "../Component/GuideAi";
 import Top10 from "../Component/Top10";
 import Top10AI from "../Component/Top10AI";
@@ -15,16 +15,15 @@ const HomePage = () => {
       <Home />
       <TopTools />
       <SomeNewAiCategories />
+      {/* <ExploreMoreAi /> */}
       <ExploreMoreAi />
-      
-      <Top10 /> 
+
+      <Top10 />
       <GuideAi />
       <Top10AI />
-      <EnthusiastsAI/>
+      <EnthusiastsAI />
       <WhyCome />
       <Contribute />
-
-
     </>
   );
 };

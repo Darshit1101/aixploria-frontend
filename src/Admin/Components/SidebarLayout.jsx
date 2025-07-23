@@ -63,6 +63,9 @@ const SidebarLayout = () => {
           <NavLink to="/dashboard/add-gpt" className={linkStyle}>
              <FaRocketchat/> Add GPT
           </NavLink>
+          <NavLink to="/dashboard/blog" className={linkStyle}>
+             <FaRocketchat/> Add Blog
+          </NavLink>
         </nav>
 
         <button

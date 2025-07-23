@@ -18,7 +18,7 @@ const Blog = () => {
     setLoading(true);
     try {
       const res = await axios.get("http://localhost:5000/api/blogs");
-      const normalized = res.data.map(blog => ({
+      const normalized = res.data.map((blog) => ({
         ...blog,
         id: blog._id || blog.id,
         subitems: Array.isArray(blog.subitems) ? blog.subitems : [],
@@ -46,7 +46,13 @@ const Blog = () => {
   };
 
   const addSubitem = () => {
-    setForm({ ...form, subitems: [...form.subitems, { title: "", image: "", description: "", link: "" }] });
+    setForm({
+      ...form,
+      subitems: [
+        ...form.subitems,
+        { title: "", image: "", description: "", link: "" },
+      ],
+    });
   };
 
   const removeSubitem = (index) => {
@@ -63,7 +69,13 @@ const Blog = () => {
       } else {
         await axios.post("http://localhost:5000/api/blogs", form);
       }
-      setForm({ title: "", image: "", description: "", link: "", subitems: [] });
+      setForm({
+        title: "",
+        image: "",
+        description: "",
+        link: "",
+        subitems: [],
+      });
       setEditingId(null);
       fetchBlogs();
     } catch (err) {
@@ -96,24 +108,99 @@ const Blog = () => {
       </h2>
 
       {/* Blog Form */}
-      <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded shadow">
-        <input name="title" value={form.title} onChange={handleChange} placeholder="Blog Title" className="w-full px-4 py-2 border rounded" />
-        <input name="image" value={form.image} onChange={handleChange} placeholder="Main Image URL" className="w-full px-4 py-2 border rounded" />
-        <textarea name="description" value={form.description} onChange={handleChange} placeholder="Main Description" className="w-full px-4 py-2 border rounded" />
-        <input name="link" value={form.link} onChange={handleChange} placeholder="Main Link" className="w-full px-4 py-2 border rounded" />
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4 bg-white p-6 rounded shadow"
+      >
+        <input
+          name="title"
+          value={form.title}
+          onChange={handleChange}
+          placeholder="Blog Title"
+          className="w-full px-4 py-2 border rounded"
+        />
+        <input
+          name="image"
+          value={form.image}
+          onChange={handleChange}
+          placeholder="Main Image URL"
+          className="w-full px-4 py-2 border rounded"
+        />
+        <textarea
+          name="description"
+          value={form.description}
+          onChange={handleChange}
+          placeholder="Main Description"
+          className="w-full px-4 py-2 border rounded"
+        />
+        <input
+          name="link"
+          value={form.link}
+          onChange={handleChange}
+          placeholder="Main Link"
+          className="w-full px-4 py-2 border rounded"
+        />
 
         <h3 className="text-lg font-semibold mt-6">Sub Items</h3>
         {form.subitems.map((item, index) => (
-          <div key={index} className="bg-gray-50 border p-4 rounded space-y-2 mb-2">
-            <input value={item.title} onChange={(e) => handleSubitemChange(index, "title", e.target.value)} placeholder="Sub Title" className="w-full px-3 py-1 border rounded" />
-            <input value={item.image} onChange={(e) => handleSubitemChange(index, "image", e.target.value)} placeholder="Sub Image URL" className="w-full px-3 py-1 border rounded" />
-            <input value={item.link} onChange={(e) => handleSubitemChange(index, "link", e.target.value)} placeholder="Sub Link" className="w-full px-3 py-1 border rounded" />
-            <textarea value={item.description} onChange={(e) => handleSubitemChange(index, "description", e.target.value)} placeholder="Sub Description" className="w-full px-3 py-1 border rounded" />
-            <button type="button" onClick={() => removeSubitem(index)} className="text-sm text-red-500 hover:underline">Remove Subitem</button>
+          <div
+            key={index}
+            className="bg-gray-50 border p-4 rounded space-y-2 mb-2"
+          >
+            <input
+              value={item.title}
+              onChange={(e) =>
+                handleSubitemChange(index, "title", e.target.value)
+              }
+              placeholder="Sub Title"
+              className="w-full px-3 py-1 border rounded"
+            />
+            <input
+              value={item.image}
+              onChange={(e) =>
+                handleSubitemChange(index, "image", e.target.value)
+              }
+              placeholder="Sub Image URL"
+              className="w-full px-3 py-1 border rounded"
+            />
+            <input
+              value={item.link}
+              onChange={(e) =>
+                handleSubitemChange(index, "link", e.target.value)
+              }
+              placeholder="Sub Link"
+              className="w-full px-3 py-1 border rounded"
+            />
+            <textarea
+              value={item.description}
+              onChange={(e) =>
+                handleSubitemChange(index, "description", e.target.value)
+              }
+              placeholder="Sub Description"
+              className="w-full px-3 py-1 border rounded"
+            />
+            <button
+              type="button"
+              onClick={() => removeSubitem(index)}
+              className="text-sm text-red-500 hover:underline"
+            >
+              Remove Subitem
+            </button>
           </div>
         ))}
-        <button type="button" onClick={addSubitem} className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Add Subitem</button>
-        <button type="submit" className="ml-4 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">{editingId ? "Update Blog" : "Add Blog"}</button>
+        <button
+          type="button"
+          onClick={addSubitem}
+          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+        >
+          Add Subitem
+        </button>
+        <button
+          type="submit"
+          className="ml-4 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          {editingId ? "Update Blog" : "Add Blog"}
+        </button>
       </form>
 
       {/* Blog Display */}
@@ -124,11 +211,25 @@ const Blog = () => {
         <p className="text-red-500">{error}</p>
       ) : (
         blogs.map((blog) => (
-          <div key={blog.id} className="border rounded p-4 mb-6 bg-white shadow-sm">
+          <div
+            key={blog.id}
+            className="border rounded p-4 mb-6 bg-white shadow-sm"
+          >
             <h4 className="text-lg font-semibold mb-1">{blog.title}</h4>
-            <img src={blog.image} alt={blog.title} className="w-full max-h-60 object-cover mb-2 rounded" />
+            <img
+              src={blog.image}
+              alt={blog.title}
+              className="w-full max-h-60 object-cover mb-2 rounded"
+            />
             <p className="mb-1">{blog.description}</p>
-            <a href={blog.link} className="text-blue-600 underline" target="_blank" rel="noreferrer">Visit Main Link</a>
+            <a
+              href={blog.link}
+              className="text-blue-600 underline"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Visit Main Link
+            </a>
 
             {Array.isArray(blog.subitems) && blog.subitems.length > 0 && (
               <div className="mt-4">
@@ -136,17 +237,40 @@ const Blog = () => {
                 {blog.subitems.map((sub, i) => (
                   <div key={i} className="mt-2 border-t pt-2">
                     <h6 className="font-medium">{sub.title}</h6>
-                    {sub.image && <img src={sub.image} alt={sub.title} className="w-full max-h-40 object-cover rounded mt-1" />}
+                    {sub.image && (
+                      <img
+                        src={sub.image}
+                        alt={sub.title}
+                        className="w-full max-h-40 object-cover rounded mt-1"
+                      />
+                    )}
                     <p>{sub.description}</p>
-                    <a href={sub.link} className="text-blue-500 underline" target="_blank" rel="noreferrer">Visit Sub Link</a>
+                    <a
+                      href={sub.link}
+                      className="text-blue-500 underline"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Visit Sub Link
+                    </a>
                   </div>
                 ))}
               </div>
             )}
 
             <div className="mt-4 space-x-2">
-              <button onClick={() => handleEdit(blog)} className="px-4 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">Edit</button>
-              <button onClick={() => handleDelete(blog.id)} className="px-4 py-1 bg-red-600 text-white rounded hover:bg-red-700">Delete</button>
+              <button
+                onClick={() => handleEdit(blog)}
+                className="px-4 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => handleDelete(blog.id)}
+                className="px-4 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+              >
+                Delete
+              </button>
             </div>
           </div>
         ))
