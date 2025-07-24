@@ -31,29 +31,30 @@ const NewAi = () => {
   const fetchCategories = async () => {
     try {
       const res = await axios.get(`${API_BASE_URL}/api/categories`);
-      setCategories(["All Categories", ...res.data.map(c => c.name)]);
+      setCategories(["All Categories", ...res.data.map((c) => c.name)]);
     } catch (err) {
       console.error(err);
     }
   };
 
-  const handleSearch = e => {
+  const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
     }
   };
 
-  const handleCategorySelect = category => {
+  const handleCategorySelect = (category) => {
     setSelectedCategory(category);
     setIsDropdownOpen(false);
-    if (category !== "All Categories") navigate(`/category/${encodeURIComponent(category)}`);
+    if (category !== "All Categories")
+      navigate(`/category/${encodeURIComponent(category)}`);
   };
 
   const clearSearch = () => setSearchQuery("");
 
-  const filtered = tools.filter(tool =>
-    tool.premiumtype === "Free" && tool.isVerified
+  const filtered = tools.filter(
+    (tool) => tool.premiumtype === "Free" && tool.isVerified
   );
 
   return (
@@ -63,12 +64,16 @@ const NewAi = () => {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
           <input
             value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
+            onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search over 5000+ AI..."
             className="pl-10 pr-10 py-2 rounded-full bg-transparent border border-[#FF9D2D] w-full sm:w-[380px]"
           />
           {searchQuery && (
-            <button type="button" onClick={clearSearch} className="absolute right-3 top-1/2 -translate-y-1/2">
+            <button
+              type="button"
+              onClick={clearSearch}
+              className="absolute right-3 top-1/2 -translate-y-1/2"
+            >
               <X className="w-5 h-5 text-gray-400" />
             </button>
           )}
@@ -84,7 +89,7 @@ const NewAi = () => {
           </button>
           {isDropdownOpen && (
             <div className="absolute mt-2 w-full bg-black border border-[#FF9D2D] rounded-lg z-20">
-              {categories.map(cat => (
+              {categories.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => handleCategorySelect(cat)}
@@ -100,8 +105,12 @@ const NewAi = () => {
 
       <div className="mt-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {filtered.slice(0, 8).map(tool => (
-            <FeaturedCard key={tool.id} {...tool} free={tool.premiumtype === "Free"} />
+          {filtered.slice(0, 8).map((tool) => (
+            <FeaturedCard
+              key={tool.id}
+              {...tool}
+              free={tool.premiumtype === "Free"}
+            />
           ))}
         </div>
       </div>

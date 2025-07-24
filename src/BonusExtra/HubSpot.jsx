@@ -1,108 +1,135 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FaRobot, FaPencilAlt, FaRocket, FaBullhorn } from "react-icons/fa";
+import robot from "../Images/GAI.png";
+import Star1 from "../Images/Star.png";
+import HeroSection from "../Component/HeroSection";
+import API_BASE_URL from "../Admin/utils/api";
 import { MdOutlineContentPasteSearch } from "react-icons/md";
 import { SiWordpress } from "react-icons/si";
 import { GiWorld } from "react-icons/gi";
-import API_BASE_URL from "../Admin/utils/api";
-
-const iconMap = {
-  robot: <FaRobot className="text-orange-500 text-2xl" />,
-  pencil: <FaPencilAlt className="text-orange-500 text-2xl" />,
-  rocket: <FaRocket className="text-orange-500 text-2xl" />,
-  bullhorn: <FaBullhorn className="text-orange-500 text-2xl" />,
-  search: <MdOutlineContentPasteSearch className="text-orange-500 text-2xl" />,
-  wordpress: <SiWordpress className="text-orange-500 text-2xl" />,
-  world: <GiWorld className="text-orange-500 text-2xl" />,
-};
+import icon2 from "../Images/icon.png";
 
 const HubSpot = () => {
   const [tools, setTools] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchHubspots = async () => {
+    const fetchTools = async () => {
       try {
-        const res = await axios.get(`${API_BASE_URL}/api/hubspot/`);
-        console.log("Raw API response:", res.data); // DEBUG
-
-        const formatted = Array.isArray(res.data)
-          ? res.data.map((tool) => {
-            let parsedOptions = [];
-
-            try {
-              // Parse first level
-              const level1 = JSON.parse(tool.options);
-              // Parse second level if it's a string
-              parsedOptions = Array.isArray(level1)
-                ? JSON.parse(level1[0])
-                : [];
-            } catch (e) {
-              console.warn("Failed to parse options for tool:", tool.title);
-            }
-
-            return {
-              ...tool,
-              options: parsedOptions,
-            };
-          })
-          : [];
-
-        setTools(formatted);
+        const response = await axios.get(`${API_BASE_URL}/api/hubspot`);
+        const data = response.data.data || [];
+        // Parse options if it's a JSON string
+        const formattedTools = data.map((tool) => ({
+          ...tool,
+          options:
+            typeof tool.options === "string" &&
+            tool.options.startsWith("[") &&
+            tool.options.endsWith("]")
+              ? JSON.parse(tool.options)
+              : Array.isArray(tool.options)
+              ? tool.options
+              : [],
+        }));
+        setTools(formattedTools);
       } catch (error) {
-        console.error("Failed to fetch tools:", error);
+        console.error("Error fetching tools:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchHubspots();
+    fetchTools();
   }, []);
 
+  const iconMap = {
+    robot: <FaRobot className="text-white text-2xl" />,
+    pencil: <FaPencilAlt className="text-white text-2xl" />,
+    rocket: <FaRocket className="text-white text-2xl" />,
+    bullhorn: <FaBullhorn className="text-white text-2xl" />,
+    search: <MdOutlineContentPasteSearch className="text-white text-2xl" />,
+    wordpress: <SiWordpress className="text-white text-2xl" />,
+    world: <GiWorld className="text-white text-2xl" />,
+  };
+
+  if (loading) {
+    return <div className="text-center py-12">Loading tools...</div>;
+  }
 
   return (
-    <div className="bg-black min-h-screen font-sans py-16 px-4 sm:px-8">
-      <div className="max-w-6xl mx-auto text-center">
-        <h1 className="text-3xl sm:text-4xl font-bold text-[#1D1D1F] mb-2">
-          <span className="inline-flex items-center gap-2 text-orange-600">
-            <img
-              src="https://static.hsappstatic.net/ui-icons/static-2.11.0/images/logo.svg"
-              alt="HubSpot"
-              className="w-6 h-6"
-            />
-            HubSpot AI tools
-          </span>
-        </h1>
-        <p className="italic text-gray-100 text-sm mb-2">
-          For enterprises and professionals
-        </p>
-        <p className="text-lg text-[#767676] font-medium mb-12">
-          Discover a list of top-quality and secure tools
-        </p>
+    <>
+      <HeroSection
+        backgroundText="A I T O O L S"
+        subtitle="Artificial intelligence for everyone"
+        title="HubSpot AI tools"
+        description="For enterprises and professionals Discover a list of top-quality and secure tools"
+        buttonText="GET A PREMIUM"
+        buttonLink="/premium"
+        buttonIcon={Star1}
+        mainImage={robot}
+        mainImageAlt="AI Assistant Robot"
+      />
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {tools.map((tool, index) => (
-            <a href={tool.link.startsWith("http") ? tool.link : `https://${tool.link}`} target="_blank" rel="noopener noreferrer">
-              <div
-                key={index}
-                className="bg-[#191919] p-6 rounded-xl h-[300px] shadow-md text-left hover:shadow-lg transition-all"
-              >
-                <div className="flex items-center border-b-2 border-red-200 py-2 gap-3 mb-4 font-semibold text-lg text-white">
-                  {iconMap[tool.iconKey] || iconMap.robot}
-                  {tool.title}
-                </div>
-                {/* <div className="text-sm text-gray-500">
-                  {tool.description}
-                </div> */}
-                <ul className="text-[16px] text-[#767676] space-y-2 list-disc pl-5">
+      <div className="bg-black min-h-screen font-sans py-16 px-4 sm:px-8 text-white">
+        <div className="max-w-6xl mx-auto text-center">
+          <h1 className="text-3xl md:text-4xl font-bold text-orange-500 mb-4">
+            DISCOVER A LIST OF TOP-QUALITY AND SECURE TOOLS
+          </h1>
+          <p className="text-gray-300 text-sm mb-12">
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 relative">
+            {tools?.length > 0 ? (
+              tools?.map((tool) => (
+                <div
+                  key={tool.id}
+                  className="relative bg-[#1e1e1e] rounded-[30px] p-8 text-left min-h-[320px] flex flex-col justify-start"
+                >
+                  <div
+                    className="absolute top-6 left-0 z-20"
+                    style={{ transform: "translate(0, -50%)" }}
+                  >
+                    <div className="flex items-center justify-center shadow-lg">
+                      {/* {iconMap[tool.iconKey] || Star1} */}
+                      <img className="h-30 w-full" src={icon2} alt="" />
+                    </div>
+                  </div>
+
+                  <div className="absolute right-0 -top-22 text-[200px] text-[#2a2a2a] font-bold opacity-20 select-none pointer-events-none">
+                    AI
+                  </div>
+
+                  <h3 className="text-lg font-semibold text-[#FFA500] mb-4 uppercase mt-12">
+                    {tool.title}
+                  </h3>
+
                   {tool.options && tool.options.length > 0 ? (
-                    tool.options.map((point, idx) => <li key={idx}>{point}</li>)
+                    <ul className="text-gray-300 text-sm space-y-2 flex-grow">
+                      {tool.options.map((point, idx) => (
+                        <li key={idx} className="flex items-start">
+                          <span className="mr-2">-</span>
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
                   ) : (
-                    <li>No features listed</li>
+                    <p className="text-gray-300 text-sm flex-grow">
+                      {tool.description || "No description available"}
+                    </p>
                   )}
-                </ul>
-              </div></a>
-          ))}
+                </div>
+              ))
+            ) : (
+              <div className="col-span-2 text-center py-12">
+                <p>No tools found. Please add some through the admin panel.</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
