@@ -1,18 +1,18 @@
-import { useState } from 'react';
-import axios from 'axios';
-import API_BASE_URL from '../utils/api';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import axios from "axios";
+import API_BASE_URL from "../utils/api";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
-  const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('secure@123');
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState("admin");
+  const [password, setPassword] = useState("secure@123");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
@@ -20,10 +20,10 @@ const LoginForm = () => {
         username,
         password,
       });
-      localStorage.setItem('admin', JSON.stringify(res.data.user));
-      navigate('/dashboard/users');
+      localStorage.setItem("admin", JSON.stringify(res.data.user));
+      navigate("/dashboard/users");
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      setError(err.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -35,7 +35,9 @@ const LoginForm = () => {
         onSubmit={handleLogin}
         className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md space-y-6"
       >
-        <h2 className="text-2xl font-bold text-center text-gray-800">Admin Login</h2>
+        <h2 className="text-2xl font-bold text-center text-gray-800">
+          Admin Login
+        </h2>
 
         {error && (
           <p className="text-red-500 text-center text-sm bg-red-50 border border-red-300 rounded p-2">
@@ -44,7 +46,10 @@ const LoginForm = () => {
         )}
 
         <div>
-          <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="username"
+            className="block text-sm font-medium text-gray-700"
+          >
             Username
           </label>
           <input
@@ -57,7 +62,10 @@ const LoginForm = () => {
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-gray-700"
+          >
             Password
           </label>
           <input
@@ -75,7 +83,7 @@ const LoginForm = () => {
           disabled={loading}
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition disabled:opacity-60"
         >
-          {loading ? 'Logging in...' : 'Login'}
+          {loading ? "Logging in..." : "Login"}
         </button>
       </form>
     </div>

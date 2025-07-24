@@ -43,7 +43,6 @@ const TopTools = () => {
     }
   };
 
-
   const toggleVerified = () => setIsVerified((prev) => !prev);
   const clearSearch = () => setSearchQuery("");
 
@@ -100,10 +99,11 @@ const TopTools = () => {
           {/* Verified Toggle */}
           <button
             onClick={toggleVerified}
-            className={`flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-sm sm:text-base font-medium transition ${isVerified
-              ? "bg-[#FF9D2D] text-black"
-              : "bg-[#FF9D2D]/30 text-white"
-              }`}
+            className={`flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-sm sm:text-base font-medium transition ${
+              isVerified
+                ? "bg-[#FF9D2D] text-black"
+                : "bg-[#FF9D2D]/30 text-white"
+            }`}
           >
             Verified
           </button>
@@ -146,7 +146,11 @@ const TopTools = () => {
             <FeaturedCard
               key={tool.id}
               name={tool.name}
-              logo={`${API_BASE_URL}${tool.image}`}
+              logo={
+                tool.image.startsWith("http") || tool.image.startsWith("https")
+                  ? tool.image
+                  : `https://${tool.image}`
+              }
               description={tool.description}
               ranking={tool.views}
               verified={tool.verified}

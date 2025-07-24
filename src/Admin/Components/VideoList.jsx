@@ -1,8 +1,8 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from "react";
 
 const VideoList = ({ videos, onEdit, onDelete }) => {
-  const [sortBy, setSortBy] = useState('');
-  const [filterCategory, setFilterCategory] = useState('');
+  const [sortBy, setSortBy] = useState("");
+  const [filterCategory, setFilterCategory] = useState("");
 
   // Get unique categories for filter dropdown
   const categories = useMemo(() => {
@@ -18,13 +18,13 @@ const VideoList = ({ videos, onEdit, onDelete }) => {
       result = result.filter((video) => video.category === filterCategory);
     }
 
-    if (sortBy === 'title') {
+    if (sortBy === "title") {
       result.sort((a, b) => a.title.localeCompare(b.title));
-    } else if (sortBy === 'length') {
+    } else if (sortBy === "length") {
       result.sort((a, b) => {
-        const [minA, secA] = a.length.split(':').map(Number);
-        const [minB, secB] = b.length.split(':').map(Number);
-        return (minA * 60 + secA) - (minB * 60 + secB);
+        const [minA, secA] = a.length.split(":").map(Number);
+        const [minB, secB] = b.length.split(":").map(Number);
+        return minA * 60 + secA - (minB * 60 + secB);
       });
     }
 
@@ -44,7 +44,9 @@ const VideoList = ({ videos, onEdit, onDelete }) => {
           >
             <option value="">All</option>
             {categories.map((cat) => (
-              <option key={cat} value={cat}>{cat}</option>
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
             ))}
           </select>
         </div>
@@ -75,8 +77,12 @@ const VideoList = ({ videos, onEdit, onDelete }) => {
             >
               <div>
                 <h2 className="font-bold text-xl mb-1">{video.title}</h2>
-                <p className="text-sm text-gray-600 mb-1">Category: {video.category}</p>
-                <p className="text-sm text-gray-600 mb-1">Length: {video.length}</p>
+                <p className="text-sm text-gray-600 mb-1">
+                  Category: {video.category}
+                </p>
+                <p className="text-sm text-gray-600 mb-1">
+                  Length: {video.length}
+                </p>
                 <a
                   href={video.youtubeLink}
                   target="_blank"
@@ -86,8 +92,8 @@ const VideoList = ({ videos, onEdit, onDelete }) => {
                   Watch on YouTube
                 </a>
                 <p className="text-sm mt-2">
-                  <span className="font-semibold">Hashtags:</span>{' '}
-                  {video.hashtags.join(', ')}
+                  <span className="font-semibold">Hashtags:</span>{" "}
+                  {video.hashtags.join(", ")}
                 </p>
               </div>
 

@@ -1,28 +1,29 @@
 // src/components/Login.js
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import API_BASE_URL from "../Admin/utils/api";
 
 const Login = () => {
-  const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('secure@123');
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState("admin");
+  const [password, setPassword] = useState("secure@123");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', {
+      const res = await axios.post(`${API_BASE_URL}/api/auth/login`, {
         username,
         password,
       });
 
-      localStorage.setItem('admin', JSON.stringify(res.data.user));
-      navigate('/dashboard/users');
+      localStorage.setItem("admin", JSON.stringify(res.data.user));
+      navigate("/dashboard/users");
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      setError(err.response?.data?.message || "Login failed");
     }
   };
 
@@ -30,10 +31,20 @@ const Login = () => {
     <div className="login mt-100">
       <h2>Admin Login</h2>
       <form onSubmit={handleLogin}>
-        <input type="text" onChange={e => setUsername(e.target.value)} placeholder="Username" required />
-        <input type="password"  onChange={e => setPassword(e.target.value)} placeholder="Password" required />
+        <input
+          type="text"
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Username"
+          required
+        />
+        <input
+          type="password"
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          required
+        />
         <button type="submit">Login</button>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
       </form>
     </div>
   );

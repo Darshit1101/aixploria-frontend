@@ -20,9 +20,7 @@ const PremiumResults = () => {
       const uniqueTypes = [...new Set(tools.map((tool) => tool.premiumtype))];
       setPremiumTypes(uniqueTypes);
 
-      const filteredByType = tools.filter(
-        (tool) => tool.premiumtype === type
-      );
+      const filteredByType = tools.filter((tool) => tool.premiumtype === type);
       setResults(filteredByType);
     };
 
@@ -37,7 +35,9 @@ const PremiumResults = () => {
   };
 
   return (
-    <div className="bg-black min-h-screen text-white"><br /><br />
+    <div className="bg-black min-h-screen text-white">
+      <br />
+      <br />
       <div className="px-4 py-8 max-w-7xl mx-auto">
         <div className="flex justify-between">
           <h1 className="text-2xl font-bold mb-4">Premium Type: {type}</h1>
@@ -56,13 +56,19 @@ const PremiumResults = () => {
         </div>
 
         {/* Grid of Tools */}
-        <div><br />
+        <div>
+          <br />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             {results.map((tool) => (
               <FeaturedCard
                 key={tool.id}
                 name={tool.name}
-                logo={`${API_BASE_URL}${tool.image}`}
+                logo={
+                  tool.image.startsWith("http") ||
+                  tool.image.startsWith("https")
+                    ? tool.image
+                    : `https://${tool.image}`
+                }
                 description={tool.description}
                 ranking={tool.views}
                 verified={tool.verified}

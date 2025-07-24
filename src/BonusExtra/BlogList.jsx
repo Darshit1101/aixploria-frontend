@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import API_BASE_URL from "../Admin/utils/api";
 
 const BlogList = () => {
   const [blogs, setBlogs] = useState([]);
@@ -8,7 +9,7 @@ const BlogList = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/blogs")
+      .get(`${API_BASE_URL}/api/blogs`)
       .then((res) => setBlogs(res.data))
       .catch((err) => console.error(err));
   }, []);

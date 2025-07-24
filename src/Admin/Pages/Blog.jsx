@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import API_BASE_URL from "../utils/api";
 
 const Blog = () => {
   const [form, setForm] = useState({
@@ -17,7 +18,7 @@ const Blog = () => {
   const fetchBlogs = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:5000/api/blogs");
+      const res = await axios.get(`${API_BASE_URL}/api/blogs`);
       const normalized = res.data.map((blog) => ({
         ...blog,
         id: blog._id || blog.id,
@@ -65,9 +66,9 @@ const Blog = () => {
     e.preventDefault();
     try {
       if (editingId) {
-        await axios.put(`http://localhost:5000/api/blogs/${editingId}`, form);
+        await axios.put(`${API_BASE_URL}/api/blogs/${editingId}`, form);
       } else {
-        await axios.post("http://localhost:5000/api/blogs", form);
+        await axios.post(`${API_BASE_URL}/api/blogs`, form);
       }
       setForm({
         title: "",
@@ -96,7 +97,7 @@ const Blog = () => {
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this blog?")) {
-      await axios.delete(`http://localhost:5000/api/blogs/${id}`);
+      await axios.delete(`${API_BASE_URL}/api/blogs/${id}`);
       fetchBlogs();
     }
   };

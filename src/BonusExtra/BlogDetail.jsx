@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
+import API_BASE_URL from "../Admin/utils/api";
 
 const BlogDetail = () => {
   const { id } = useParams();
   const [blog, setBlog] = useState(null);
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/blogs/${id}`)
+    axios.get(`${API_BASE_URL}/api/blogs/${id}`)
       .then((res) => setBlog(res.data))
       .catch((err) => console.error(err));
   }, [id]);
