@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import Swal from 'sweetalert2';
-import { FaRegEdit } from 'react-icons/fa';
-import { MdOutlineDeleteOutline } from 'react-icons/md';
-import { IoSaveOutline } from 'react-icons/io5';
-import { api } from 'axiosApi';
+import React, { useState, useEffect } from "react";
+import Swal from "sweetalert2";
+import { FaRegEdit } from "react-icons/fa";
+import { MdOutlineDeleteOutline } from "react-icons/md";
+import { IoSaveOutline } from "react-icons/io5";
+import { api } from "axiosApi";
 
 const AddCategory = () => {
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const [categories, setCategories] = useState([]);
   const [editingId, setEditingId] = useState(null);
-  const [editingName, setEditingName] = useState('');
+  const [editingName, setEditingName] = useState("");
 
   // Fetch categories on load
   useEffect(() => {
@@ -21,7 +21,7 @@ const AddCategory = () => {
       const res = await api.get(`/categories`);
       setCategories(res.data);
     } catch (error) {
-      console.error('Error fetching categories', error);
+      console.error("Error fetching categories", error);
     }
   };
 
@@ -30,31 +30,31 @@ const AddCategory = () => {
     e.preventDefault();
     try {
       const res = await api.post(`/categories/add`, { name });
-      Swal.fire('Success', res.data.message || 'Category added!', 'success');
-      setName('');
+      Swal.fire("Success", res.data.message || "Category added!", "success");
+      setName("");
       fetchCategories();
     } catch (error) {
-      Swal.fire('Error', error.response?.data?.message || 'Something went wrong', 'error');
+      Swal.fire("Error", error.response?.data?.message || "Something went wrong", "error");
     }
   };
 
   // Delete category
   const handleDelete = async (id) => {
     const result = await Swal.fire({
-      title: 'Are you sure?',
-      text: 'This will delete the category.',
-      icon: 'warning',
+      title: "Are you sure?",
+      text: "This will delete the category.",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonText: "Yes, delete it!"
     });
 
     if (result.isConfirmed) {
       try {
         await api.delete(`/categories/${id}`);
-        Swal.fire('Deleted!', 'Category deleted.', 'success');
+        Swal.fire("Deleted!", "Category deleted.", "success");
         fetchCategories();
       } catch (error) {
-        Swal.fire('Error', 'Failed to delete category.', 'error');
+        Swal.fire("Error", "Failed to delete category.", "error");
       }
     }
   };
@@ -68,12 +68,12 @@ const AddCategory = () => {
   const handleUpdate = async (id) => {
     try {
       await api.put(`/categories/${id}`, { name: editingName });
-      Swal.fire('Updated!', 'Category updated.', 'success');
+      Swal.fire("Updated!", "Category updated.", "success");
       setEditingId(null);
-      setEditingName('');
+      setEditingName("");
       fetchCategories();
     } catch (error) {
-      Swal.fire('Error', 'Update failed.', 'error');
+      Swal.fire("Error", "Update failed.", "error");
     }
   };
 
