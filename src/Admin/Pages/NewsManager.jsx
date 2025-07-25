@@ -31,7 +31,7 @@ const NewsManager = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await api.post(`/news`, { title, link });
+      await api.post(`/news/createNews`, { title, link });
       Swal.fire('Success', 'News added successfully!', 'success');
       setTitle('');
       setLink('');
@@ -52,7 +52,7 @@ const NewsManager = () => {
 
     if (result.isConfirmed) {
       try {
-        await api.delete(`/news/${id}`);
+        await api.delete(`/news/deleteNews/${id}`);
         Swal.fire('Deleted!', 'News deleted.', 'success');
         fetchNews();
       } catch (err) {
@@ -69,11 +69,7 @@ const NewsManager = () => {
 
   const handleUpdate = async (id) => {
     try {
-      await axios.put(`${API_BASE_URL}/api/news/${id}`, {
-        title: editingTitle,
-        link: editingLink,
-      });
-      // await api.put(`/news/${id}`, { title: editingTitle, link: editingLink });
+      await api.put(`/news/updateNews/${id}`, { title: editingTitle, link: editingLink });
       Swal.fire('Updated!', 'News updated.', 'success');
       setEditingId(null);
       setEditingTitle('');
