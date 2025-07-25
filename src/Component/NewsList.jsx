@@ -23,7 +23,7 @@ const NewAi = () => {
 
   const fetchNews = async () => {
     try {
-      const res = await api.get(`/news`);
+      const res = await api.get(`/news/getAllNews`);
       setNewsData(res.data);
     } catch (error) {
       console.error("Error fetching news:", error);
