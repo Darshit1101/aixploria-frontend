@@ -1,21 +1,19 @@
-"use client";
-
-import { useState } from "react";
 import True from "../Images/Explore/True.png"; // Adjust if needed
 import Down from "../Images/Explore/Down.png"; // Adjust if needed
+import DirectoryCard from "./DirectoryCard";
 const directoryData = [
   {
     id: 1,
-    text: `                         As a result, the AI tool directory quickly becomes unreadable, and this option becomes essential. With great patience, we have carefully selected the most innovative and useful AIs to offer you the best options available. By the way on this subject, you can check our “top 10” list in the tab (of the same name) at the top of this page.`,
+    text: `As a result, the AI tool directory quickly becomes unreadable, and this option becomes essential. With great patience, we have carefully selected the most innovative and useful AIs to offer you the best options available. By the way on this subject, you can check our “top 10” list in the tab (of the same name) at the top of this page.`,
     image: True,
     iconColor: "from-[#FF9D2D] to-[#FF7A1A]",
   },
   {
     id: 2,
-    text: `                    Meanwhile, a new special section called « top 10 AI » has been created. This one updates in real time and allows you to see the top 10 AI in each category at a glance. It’s very useful, because it’s sometimes hard to find your way around, with so many new AI tools coming out every day.`,
+    text: `Meanwhile, a new special section called « top 10 AI » has been created. This one updates in real time and allows you to see the top 10 AI in each category at a glance. It’s very useful, because it’s sometimes hard to find your way around, with so many new AI tools coming out every day.`,
     image: Down,
     iconColor: "from-[#E11D48] to-[#BE123C]",
-  }
+  },
 ];
 
 export default function Top10() {
@@ -28,7 +26,8 @@ export default function Top10() {
             TOP 10 BEST AI
           </h2>
           <p className="text-white text-[12px] max-w-3xl mx-auto">
-            Lorem ipsum is simply dummy text of the printing and typesetting industry.
+            Lorem ipsum is simply dummy text of the printing and typesetting
+            industry.
           </p>
         </div>
 
@@ -44,32 +43,6 @@ export default function Top10() {
           ))}
         </div>
       </div>
-    </div>
-  );
-}
-
-function DirectoryCard({ content, iconColor, image }) {
-  return (
-    <div className="relative w-full bg-[#191919] rounded-3xl p-6 shadow-2xl text-left z-0">
-      {/* Background AI Text */}
-      <div className="absolute -top-20 right-0 text-[180px] font-black text-white/5 z-0 select-none">
-        AI
-      </div>
-
-      {/* Floating Icon */}
-      <div className="absolute -top-5 md:-top-14  z-10">
-        <img
-          src={image}
-          alt="Gear Icon"
-          className="md:w-[140px] md:h-[150px] w-[100px] h-[110px]"
-        />
-      </div>
-
-      {/* Description */}
-      <p className="relative z-10 text-[#767676] text-justify text-[12px] md:text-[16px] font-[Poppins] leading-relaxed mt-16">
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {content}&nbsp;
-        <br /><br />
-      </p>
     </div>
   );
 }

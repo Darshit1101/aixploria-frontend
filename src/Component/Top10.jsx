@@ -1,8 +1,6 @@
-"use client";
-
-import { useState } from "react";
 import GearIcon from "../Images/Stack.png"; // Adjust if needed
 import Magnifine from "../Images/Magnifine.png"; // Adjust if needed
+import DirectoryCard from "./DirectoryCard";
 const directoryData = [
   {
     id: 1,
@@ -15,7 +13,7 @@ const directoryData = [
     text: `Lately, the site also posts articles that explain how each AI works. Found an AI tools that doesn’t appear in the list? From now on, it is possible to submit new AIs so that they can be added to the ranking or the top 10. Actually, Aixploria is a kind of directory and search engine dedicated to AI. With its simple and clean style, you easily search using keywords like on a search engine.`,
     image: Magnifine,
     iconColor: "from-[#E11D48] to-[#BE123C]",
-  }
+  },
 ];
 
 export default function Top10() {
@@ -28,7 +26,8 @@ export default function Top10() {
             THE WORLD'S BEST AI TOOLS DIRECTORY
           </h2>
           <p className="text-white text-[12px] max-w-3xl mx-auto">
-            Lorem ipsum is simply dummy text of the printing and typesetting industry.
+            Lorem ipsum is simply dummy text of the printing and typesetting
+            industry.
           </p>
         </div>
 
@@ -44,32 +43,6 @@ export default function Top10() {
           ))}
         </div>
       </div>
-    </div>
-  );
-}
-
-function DirectoryCard({ content, iconColor, image }) {
-  return (
-    <div className="relative w-full bg-[#191919] rounded-3xl p-6 shadow-2xl text-left z-0">
-      {/* Background AI Text */}
-      <div className="absolute -top-20 right-0 text-[180px] font-black text-white/5 z-0 select-none">
-        AI
-      </div>
-
-      {/* Floating Icon */}
-      <div className="absolute -top-5 md:-top-14  z-10">
-        <img
-          src={image}
-          alt="Gear Icon"
-          className="md:w-[140px] md:h-[150px] w-[100px] h-[110px]"
-        />
-      </div>
-
-      {/* Description */}
-      <p className="relative z-10 text-[#767676] text-justify text-[12px] md:text-[16px] font-[Poppins] leading-relaxed mt-16">
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {content}&nbsp;
-        <br /><br />
-      </p>
     </div>
   );
 }
