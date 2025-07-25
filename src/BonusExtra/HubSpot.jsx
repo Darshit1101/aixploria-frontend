@@ -8,7 +8,6 @@ import API_BASE_URL from "../Admin/utils/api";
 import { MdOutlineContentPasteSearch } from "react-icons/md";
 import { SiWordpress } from "react-icons/si";
 import { GiWorld } from "react-icons/gi";
-import icon2 from "../Images/icon.png";
 
 const HubSpot = () => {
   const [tools, setTools] = useState([]);
@@ -32,6 +31,8 @@ const HubSpot = () => {
               : [],
         }));
         setTools(formattedTools);
+        console.log(formattedTools,'formateee');
+        
       } catch (error) {
         console.error("Error fetching tools:", error);
       } finally {
@@ -93,7 +94,12 @@ const HubSpot = () => {
                   >
                     <div className="flex items-center justify-center shadow-lg">
                       {/* {iconMap[tool.iconKey] || Star1} */}
-                      <img className="h-30 w-full" src={icon2} alt="" />
+                      {console.log(`${API_BASE_URL}/${tool.image}`,'image')
+                      }
+                      <img 
+                      className="h-30 w-full" 
+                      src={`${API_BASE_URL}/${tool.image}`} 
+                      alt="hubspot" />
                     </div>
                   </div>
 

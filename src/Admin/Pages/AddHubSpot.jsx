@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -5,12 +6,19 @@ import API_BASE_URL from "../utils/api";
 import { FaRegEdit } from "react-icons/fa";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { IoSaveOutline } from "react-icons/io5";
+import { FiUploadCloud } from "react-icons/fi";
 
 const AddHubspot = () => {
-  const [form, setForm] = useState({ title: "", description: "", link: "" });
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    link: "",
+    image: null,
+  });
   const [options, setOptions] = useState([""]);
   const [hubspots, setHubspots] = useState([]);
   const [editingId, setEditingId] = useState(null);
+  const [preview, setPreview] = useState("");
 
   useEffect(() => {
     fetchHubspots();
@@ -20,7 +28,6 @@ const AddHubspot = () => {
     try {
       const res = await axios.get(`${API_BASE_URL}/api/hubspot`);
       console.log(res.data.data, "dataaa");
-
       setHubspots(res.data.data || []);
     } catch (error) {
       setHubspots([]);
@@ -30,6 +37,14 @@ const AddHubspot = () => {
 
   const handleFormChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setPreview(URL.createObjectURL(file));
+      setForm({ ...form, image: file });
+    }
   };
 
   const handleOptionChange = (index, value) => {
@@ -50,21 +65,33 @@ const AddHubspot = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const payload = {
-        ...form,
-        options: options.filter((opt) => opt.trim().length > 0),
-      };
+      const formData = new FormData();
+      formData.append("title", form.title);
+      formData.append("description", form.description);
+      formData.append("link", form.link);
+      formData.append(
+        "options",
+        options.filter((opt) => opt.trim().length > 0)
+      );
+      if (form.image) {
+        formData.append("image", form.image);
+      }
 
       if (editingId) {
-        await axios.put(`${API_BASE_URL}/api/hubspot/${editingId}`, payload);
+        await axios.put(`${API_BASE_URL}/api/hubspot/${editingId}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
         Swal.fire("Updated", "HubSpot Updated", "success");
       } else {
-        await axios.post(`${API_BASE_URL}/api/hubspot`, payload);
+        await axios.post(`${API_BASE_URL}/api/hubspot`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
         Swal.fire("Success!", "HubSpot Added", "success");
       }
 
-      setForm({ title: "", description: "", link: "" });
+      setForm({ title: "", description: "", link: "", image: null });
       setOptions([""]);
+      setPreview("");
       setEditingId(null);
       fetchHubspots();
     } catch (error) {
@@ -81,40 +108,76 @@ const AddHubspot = () => {
       title: item.title,
       description: item.description,
       link: item.link,
+      image: null, // Reset image to avoid sending old file
     });
     setOptions(item.options || [""]);
+    setPreview(item.image ? `${API_BASE_URL}/${item.image}` : "");
     setEditingId(item.id);
-    Swal.fire("Edit Mode", "Ab entry edit karo", "info");
+    Swal.fire("Edit Mode", "Edit Your Data", "info");
   };
 
   const handleDelete = async (id) => {
     const result = await Swal.fire({
-      title: "Pakka delete karna hai?",
-      text: "Yeh entry permanently delete ho jayegi!",
+      title: "Are you sure you want to delete?",
+      text: "This entry will be permanently deleted!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Haan, delete karo!",
+      confirmButtonText: "Yes, Delete!",
     });
 
     if (result.isConfirmed) {
       try {
         await axios.delete(`${API_BASE_URL}/api/hubspot/${id}`);
-        Swal.fire("Deleted!", "Entry delete ho gayi", "success");
+        Swal.fire("Deleted!", "Entry deleted", "success");
         fetchHubspots();
       } catch (error) {
-        Swal.fire("Error", "Delete nahi hua", "error");
+        Swal.fire("Error", "Error in deleting", "error");
       }
     }
   };
 
   return (
-    <div className="font-[Poppins]">
+    <div className="font-[Poppins] p-4 md:p-8">
       <h1 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">
         {editingId ? "Edit Hubspot" : "Add Hubspot"}
       </h1>
 
       <div className="max-w-7xl p-6 bg-white shadow rounded mb-10">
         <form onSubmit={handleSubmit}>
+          <div className="group relative h-64 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200 hover:border-blue-400 transition-colors cursor-pointer">
+            <input
+              type="file"
+              onChange={handleFileChange}
+              className="opacity-0 absolute inset-0 w-full h-full cursor-pointer"
+              id="postFile"
+              accept="image/*"
+            />
+            <label
+              htmlFor="postFile"
+              className="h-full flex flex-col items-center justify-center p-4"
+            >
+              {preview ? (
+                <img
+                  src={preview}
+                  alt="Preview"
+                  className="w-full h-full object-contain rounded-lg"
+                />
+              ) : (
+                <>
+                  <FiUploadCloud className="w-12 h-12 text-gray-400 mb-3 group-hover:text-blue-500 transition-colors" />
+                  <p className="text-gray-500 text-center">
+                    <span className="text-blue-500 font-medium">
+                      Upload Post Image
+                    </span>
+                    <br />
+                    <span className="text-sm text-gray-400">
+                      1600x900 recommended
+                    </span>
+                  </p>
+                </>
+              )}
+            </label>
+          </div>
           <input
             type="text"
             name="title"
@@ -191,6 +254,7 @@ const AddHubspot = () => {
           <thead>
             <tr className="bg-gray-100">
               <th className="px-4 py-2 text-left">#</th>
+              <th className="px-4 py-2 text-left">Image</th>
               <th className="px-4 py-2 text-left">Title</th>
               <th className="px-4 py-2 text-left">Description</th>
               <th className="px-4 py-2 text-left">Link</th>
@@ -201,7 +265,7 @@ const AddHubspot = () => {
           <tbody>
             {hubspots.length === 0 ? (
               <tr>
-                <td colSpan="6" className="text-center py-4">
+                <td colSpan="7" className="text-center py-4">
                   Koi data nahi hai.
                 </td>
               </tr>
@@ -209,6 +273,17 @@ const AddHubspot = () => {
               hubspots?.map((item, index) => (
                 <tr key={item.id} className="border-t">
                   <td className="px-4 py-2">{index + 1}</td>
+                  <td className="px-4 py-2">
+                    {item.image ? (
+                      <img
+                        src={`${API_BASE_URL}/${item.image}`}
+                        alt={item.title}
+                        className="w-16 h-16 object-contain rounded"
+                      />
+                    ) : (
+                      "No Image"
+                    )}
+                  </td>
                   <td className="px-4 py-2">{item.title}</td>
                   <td className="px-4 py-2">{item.description}</td>
                   <td className="px-4 py-2">

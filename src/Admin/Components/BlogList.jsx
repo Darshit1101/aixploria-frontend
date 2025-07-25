@@ -59,36 +59,38 @@ const BlogList = () => {
           </div>
 
           {/* Subitems on Click */}
-          {expandedId === (blog.id || blog._id) && Array.isArray(blog.subitems) && blog.subitems.length > 0 && (
-            <div className="mt-4 border-t pt-4 space-y-3">
-              {blog.subitems.map((sub, idx) => (
-                <div key={idx} className="flex gap-3">
-                  {sub.image && (
-                    <img
-                      src={sub.image}
-                      alt={sub.title}
-                      className="w-20 h-14 object-cover rounded"
-                    />
-                  )}
-                  <div>
-                    <h4 className="font-semibold">{sub.title}</h4>
-                    <p className="text-sm text-gray-700">{sub.description}</p>
-                    {sub.link && (
-                      <a
-                        href={sub.link}
-                        className="text-blue-500 text-xs"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        Visit Subitem Link
-                      </a>
+          {expandedId === (blog.id || blog._id) &&
+            Array.isArray(blog.subitems) &&
+            blog.subitems.length > 0 && (
+              <div className="mt-4 border-t pt-4 space-y-3">
+                {blog.subitems.map((sub, idx) => (
+                  <div key={idx} className="flex gap-3">
+                    {sub.image && (
+                      <img
+                        src={sub.image}
+                        alt={sub.title}
+                        className="w-20 h-14 object-cover rounded"
+                      />
                     )}
+                    <div>
+                      <h4 className="font-semibold">{sub.title}</h4>
+                      <p className="text-sm text-gray-700">{sub.description}</p>
+                      {sub.link && (
+                        <a
+                          href={sub.link}
+                          className="text-blue-500 text-xs"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          Visit Subitem Link
+                        </a>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
         </div>
       ))}
     </div>
