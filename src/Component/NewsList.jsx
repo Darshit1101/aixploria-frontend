@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
-import axios from 'axios';
-import { ChevronUp } from 'lucide-react';
-import API_BASE_URL from '../Admin/utils/api';
-import { api } from 'axiosApi';
+import React, { useState, useRef, useEffect } from "react";
+import axios from "axios";
+import { ChevronUp } from "lucide-react";
+import API_BASE_URL from "../Admin/utils/api";
+import { api } from "axiosApi";
 
 const NewAi = () => {
   const [newsData, setNewsData] = useState([]);
@@ -17,8 +17,8 @@ const NewAi = () => {
         // Add logic if dropdown used
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const fetchNews = async () => {
@@ -26,7 +26,7 @@ const NewAi = () => {
       const res = await api.get(`/news`);
       setNewsData(res.data);
     } catch (error) {
-      console.error('Error fetching news:', error);
+      console.error("Error fetching news:", error);
     } finally {
       setLoading(false);
     }
@@ -55,7 +55,7 @@ const NewAi = () => {
                   </span>
                   <span className="text-[#767676]">|</span>
                   <span className="text-[#767676] text-[13px] truncate">
-                    {item.title || item.text || 'Untitled'}
+                    {item.title || item.text || "Untitled"}
                   </span>
                 </div>
                 <ChevronUp className="text-[#767676] border border-b-3 rounded-lg" />
