@@ -43,6 +43,7 @@ import GptGallery from "./BonusExtra/GptGallery";
 import BlogManager from "./Admin/Pages/Blog";
 import BlogList from "./BonusExtra/BlogList";
 import BlogDetail from "./BonusExtra/BlogDetail";
+import AllAITools from "./Component/AllAITools";
 
 const PublicLayout = ({ children }) => (
   <>
@@ -191,6 +192,14 @@ const App = () => {
           element={
             <PublicLayout>
               <BlogList />
+            </PublicLayout>
+          }
+        />
+        <Route
+          path="/all-ai-tools"
+          element={
+            <PublicLayout>
+              <AllAITools />
             </PublicLayout>
           }
         />

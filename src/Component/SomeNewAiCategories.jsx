@@ -2,25 +2,59 @@
 import { useEffect, useState, useRef } from "react";
 import { ChevronUp } from "lucide-react";
 import { IoMdStar } from "react-icons/io";
-
-const categories = ["Alxploria Selection", "SuperTools", "AI Chat & Assistant"];
+import API_BASE_URL from "../Admin/utils/api"; // Import API base URL for consistency
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function SomeAICategories() {
   const [tools, setTools] = useState([]);
-  const [activeCategory, setActiveCategory] = useState("Alxploria Selection");
+  const [categories, setCategories] = useState([]);
+  const [activeCategory, setActiveCategory] = useState("");
   const [visibleItems, setVisibleItems] = useState(8);
   const containerRef = useRef(null);
 
-  // Sample data (replace with actual API call if needed)
+  // Fetch categories from API
   useEffect(() => {
-    const sampleTools = Array(10).fill().map((_, index) => ({
-      id: index,
-      name: "iFable",
-      createdAt: "2025-04-14",
-      category: categories[Math.floor(Math.random() * categories.length)],
-      visitlink: "https://example.com"
-    }));
-    setTools(sampleTools);
+    const fetchCategories = async () => {
+      try {
+        const res = await axios.get(
+          `${API_BASE_URL}/api/categories/getsomecategories`
+        );
+        const fetchedCategories = res.data.map((cat) => cat.name);
+        console.log(res.data, "res");
+
+        setCategories(fetchedCategories);
+        // Set the first category as active if categories are fetched
+        if (fetchedCategories.length > 0) {
+          setActiveCategory(fetchedCategories[0]);
+        }
+      } catch (error) {
+        console.error("Error fetching categories", error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  // Fetch tools from API
+  useEffect(() => {
+    const fetchTools = async () => {
+      try {
+        const res = await axios.get(`${API_BASE_URL}/api/cards`);
+        const fetchedTools = res.data.map((tool) => ({
+          id: tool.id,
+          name: tool.name,
+          createdAt: tool.createdAt || new Date().toISOString().split("T")[0], // Fallback to current date if not provided
+          category: tool.category,
+          visitlink: tool.visitlink,
+        }));
+        setTools(fetchedTools);
+      } catch (error) {
+        console.error("Error fetching tools", error);
+        // Fallback to empty array to avoid breaking the UI
+        setTools([]);
+      }
+    };
+    fetchTools();
   }, []);
 
   const handleCategoryClick = (category) => {
@@ -50,14 +84,15 @@ export default function SomeAICategories() {
 
         {/* Category Buttons */}
         <div className="flex flex-wrap justify-center gap-3 mb-8">
-          {categories.map((category) => (
+          {categories?.map((category) => (
             <button
-              key={category}
+              key={category.id}
               onClick={() => handleCategoryClick(category)}
-              className={`px-6 py-2 rounded-full transition-colors cursor-pointer text-sm md:text-base ${activeCategory === category
+              className={`px-6 py-2 rounded-full transition-colors cursor-pointer text-sm md:text-base ${
+                activeCategory === category
                   ? "bg-gradient-to-r from-[#E67802] to-[#FB9E3C] text-white font-medium"
                   : "bg-[#222222] border-2 border-[#FF9D2D] text-[#767676] hover:bg-[#333333]"
-                }`}
+              }`}
             >
               {category}
             </button>
@@ -77,7 +112,8 @@ export default function SomeAICategories() {
               >
                 {/* Tool Info */}
                 <div className="text-sm flex items-center text-[#767676] font-medium">
-                  {new Date(tool.createdAt).toLocaleDateString()} | <IoMdStar className="ml-1 mr-1 text-[#FA9021]" /> {tool.name}
+                  {new Date(tool.createdAt).toLocaleDateString()} |{" "}
+                  <IoMdStar className="ml-1 mr-1 text-[#FA9021]" /> {tool.name}
                 </div>
                 {/* Redirect Icon */}
                 <button
@@ -107,10 +143,18 @@ export default function SomeAICategories() {
             </button>
           </div>
         )}
+        <div className="flex justify-center">
+          <Link
+            to="/all-ai-tools"
+            className="bg-gradient-to-b from-[#E67802] to-[#FB9E3C] hover:from-transparent hover:to-transparent border border-[#FA9021] text-white font-medium px-8 py-2 rounded-full transition-colors"
+          >
+            SHOW MORE
+          </Link>
+        </div>
       </div>
 
       {/* Custom Scrollbar */}
-      <style jsx>{`
+      <style>{`
         .custom-scroll::-webkit-scrollbar {
           width: 8px;
         }
