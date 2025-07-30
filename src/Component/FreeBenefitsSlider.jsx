@@ -2,6 +2,7 @@ import React from "react";
 import Question from "../Images/Question.png";
 import GEAR3 from "../Images/Magnifine.png";
 import AIM from "../Images/Explore/BAG.png";
+import DirectoryCard from "./DirectoryCard";
 
 // Data for cards
 const directoryData = [
@@ -51,8 +52,7 @@ export default function Top10() {
       {/* Header */}
       <div className="text-center mb-12">
         <h2 className="text-[#FA9021] text-2xl md:text-4xl lg:text-5xl font-bold mb-4">
-           
-           BENEFITS OFFERED BY FREE AI TOOLS?
+          BENEFITS OFFERED BY FREE AI TOOLS?
         </h2>
         <p className="text-white text-[12px] max-w-3xl mx-auto">
           AI tools into their projects, without any cost.
@@ -65,47 +65,14 @@ export default function Top10() {
           {infiniteCards.map((item, index) => (
             <div key={index} className="w-[450px] mr-6 flex-shrink-0">
               <DirectoryCard
-                image={item.image}
+                key={item.id}
                 content={item.text}
-                question={item.question}
+                iconColor={item.iconColor}
+                image={item.image}
               />
             </div>
           ))}
         </div>
-      </div>
-    </div>
-  );
-}
-
-// Card Component
-function DirectoryCard({ image, content, question }) {
-  return (
-    <div className="relative bg-[#191919] rounded-3xl p-6 shadow-2xl text-left h-full m0px]">
-      {/* Background AI Text */}
-      <div className="absolute -top-20 right-0 text-[180px] font-black text-white/5 z-0 select-none">
-        AI
-      </div>
-
-      {/* Floating Icon */}
-      <div className="absolute -top-6 md:-top-14 z-10">
-        <img
-          src={image}
-          alt="Icon"
-          className="md:w-[140px] md:h-[150px] w-[100px] h-[110px]"
-        />
-      </div>
-
-      {/* Content Section */}
-      <div className="relative z-10 mt-25">
-        {/* Question */}
-        <p className="text-[#FA9021] text-lg md:text-xl font-semibold mb-3 text-right">
-          {question}
-        </p>
-
-        {/* Content */}
-        <p className="text-[#767676] text-justify text-[12px] md:text-[15px] leading-relaxed">
-          {content}
-        </p>
       </div>
     </div>
   );

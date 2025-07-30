@@ -1,7 +1,8 @@
 import React from "react";
-import FILES3 from "../Images/Explore/FILES3.png"
+import FILES3 from "../Images/Explore/FILES3.png";
 import GEAR3 from "../Images/Explore/GEAR3.png";
 import AIM from "../Images/Explore/AIM.png";
+import DirectoryCard from "./DirectoryCard";
 const directoryData = [
   {
     id: 1,
@@ -49,17 +50,22 @@ export default function Top10() {
           AIXPLORIA: YOUR GUIDE TO DISCOVERING THE BEST AI
         </h2>
         <p className="text-white text-[12px] max-w-3xl mx-auto">
-          Lorem ipsum is simply dummy text of the printing and typesetting industry.
+          Lorem ipsum is simply dummy text of the printing and typesetting
+          industry.
         </p>
       </div>
 
       {/* Scrolling Cards */}
       <div className="overflow-x-hidden">
         <div className="scrolling-wrapper gap-6 pt-24 relative">
-
           {infiniteCards.map((item, index) => (
             <div key={index} className="w-[450px] mr-6 flex-shrink-0">
-              <DirectoryCard image={item.image} content={item.text} />
+              <DirectoryCard
+                key={item.id}
+                content={item.text}
+                iconColor={item.iconColor}
+                image={item.image}
+              />
             </div>
           ))}
         </div>
@@ -68,23 +74,4 @@ export default function Top10() {
   );
 }
 
-function DirectoryCard({ image, content }) {
-  return (
-    <div className="relative bg-[#191919] rounded-3xl p-6 shadow-2xl text-left h-full">
-      {/* Background AI Text */}
-      <div className="absolute -top-20 right-0 text-[180px] font-black text-white/5 z-0 select-none">
-        AI
-      </div>
 
-      {/* Floating Icon */}
-      <div className="absolute -top-5 md:-top-14  z-10">
-        <img src={image} alt="Icon" className="md:w-[140px] md:h-[150px] w-[100px] h-[110px]" />
-      </div>
-
-      {/* Description */}
-      <p className="relative z-10 text-[#767676] text-justify text-[12px] md:text-[16px] font-[Poppins] leading-relaxed mt-16">
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{content}
-      </p>
-    </div>
-  );
-}

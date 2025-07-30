@@ -2,7 +2,7 @@ export default function DirectoryCard({ content, image, question }) {
   return (
     <div className="relative w-full bg-[#191919] rounded-3xl p-6 shadow-2xl text-left z-0">
       {/* Background AI Text */}
-      <div className="absolute -top-20 right-0 text-[180px] font-black text-white/5 z-0 select-none">
+      <div className="absolute -top-18 right-0 text-[180px] font-black text-white/5 z-0 select-none">
         AI
       </div>
 
