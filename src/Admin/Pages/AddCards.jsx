@@ -20,7 +20,6 @@ const AddCard = () => {
   });
 
   const [categories, setCategories] = useState([]);
-  const [loadingLogo, setLoadingLogo] = useState(false);
 
   useEffect(() => {
     fetchCategories();
@@ -40,7 +39,8 @@ const AddCard = () => {
     setForm((prevForm) => {
       const updatedForm = {
         ...prevForm,
-        [name]: type === "checkbox" ? checked : type === "file" ? files[0] : value,
+        [name]:
+          type === "checkbox" ? checked : type === "file" ? files[0] : value,
       };
 
       // If visitlink changes, attempt to fetch the logo
@@ -53,10 +53,11 @@ const AddCard = () => {
   };
 
   const fetchLogo = async (url) => {
-    setLoadingLogo(true);
     try {
       // Construct the favicon URL (basic approach)
-      const faviconUrl = `${url.includes("://") ? url.split("/")[2] : url}/favicon.ico`;
+      const faviconUrl = `${
+        url.includes("://") ? url.split("/")[2] : url
+      }/favicon.ico`;
       const response = await axios.head(faviconUrl, { timeout: 5000 });
 
       if (response.status === 200) {
@@ -80,8 +81,6 @@ const AddCard = () => {
         ...prevForm,
         logoUrl: googleFaviconUrl,
       }));
-    } finally {
-      setLoadingLogo(false);
     }
   };
 
@@ -156,7 +155,6 @@ const AddCard = () => {
             accept="image/*"
             onChange={handleChange}
             className="w-full border px-4 py-2 rounded"
-            // Optional: Remove required if you want to rely on auto-fetched logo
           />
           {form.visitlink && form.logoUrl && (
             <div className="mt-2">

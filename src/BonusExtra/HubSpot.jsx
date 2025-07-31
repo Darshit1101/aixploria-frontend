@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { FaRobot, FaPencilAlt, FaRocket, FaBullhorn } from "react-icons/fa";
 import robot from "../Images/GAI.png";
 import Star1 from "../Images/Star.png";
 import HeroSection from "../Component/HeroSection";
 import API_BASE_URL from "../Admin/utils/api";
-import { MdOutlineContentPasteSearch } from "react-icons/md";
-import { SiWordpress } from "react-icons/si";
-import { GiWorld } from "react-icons/gi";
 
 const HubSpot = () => {
   const [tools, setTools] = useState([]);
@@ -31,8 +27,6 @@ const HubSpot = () => {
               : [],
         }));
         setTools(formattedTools);
-        console.log(formattedTools,'formateee');
-        
       } catch (error) {
         console.error("Error fetching tools:", error);
       } finally {
@@ -42,16 +36,6 @@ const HubSpot = () => {
 
     fetchTools();
   }, []);
-
-  const iconMap = {
-    robot: <FaRobot className="text-white text-2xl" />,
-    pencil: <FaPencilAlt className="text-white text-2xl" />,
-    rocket: <FaRocket className="text-white text-2xl" />,
-    bullhorn: <FaBullhorn className="text-white text-2xl" />,
-    search: <MdOutlineContentPasteSearch className="text-white text-2xl" />,
-    wordpress: <SiWordpress className="text-white text-2xl" />,
-    world: <GiWorld className="text-white text-2xl" />,
-  };
 
   if (loading) {
     return <div className="text-center py-12">Loading tools...</div>;
@@ -94,12 +78,11 @@ const HubSpot = () => {
                   >
                     <div className="flex items-center justify-center shadow-lg">
                       {/* {iconMap[tool.iconKey] || Star1} */}
-                      {console.log(`${API_BASE_URL}/${tool.image}`,'image')
-                      }
-                      <img 
-                      className="h-30 w-full" 
-                      src={`${API_BASE_URL}/${tool.image}`} 
-                      alt="hubspot" />
+                      <img
+                        className="h-30 w-full"
+                        src={`${API_BASE_URL}/${tool.image}`}
+                        alt="hubspot"
+                      />
                     </div>
                   </div>
 

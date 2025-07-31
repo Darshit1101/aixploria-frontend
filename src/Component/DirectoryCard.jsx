@@ -1,6 +1,6 @@
 export default function DirectoryCard({ content, image, question }) {
   return (
-    <div className="relative w-full bg-[#191919] rounded-3xl p-6 shadow-2xl text-left z-0">
+    <div className="relative w-full bg-[#191919] h-70 rounded-3xl p-6 shadow-2xl text-left z-0">
       {/* Background AI Text */}
       <div className="absolute -top-18 right-0 text-[180px] font-black text-white/5 z-0 select-none">
         AI
@@ -11,7 +11,7 @@ export default function DirectoryCard({ content, image, question }) {
         <img
           src={image}
           alt="Gear Icon"
-          className="md:w-[140px] md:h-[150px] w-[100px] h-[110px]"
+          className="md:w-[140px] md:h-[150px] w-full h-[100px]"
         />
       </div>
 

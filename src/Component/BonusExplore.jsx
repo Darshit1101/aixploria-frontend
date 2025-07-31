@@ -1,4 +1,3 @@
-import React from "react";
 import AIVideo from "../Images/Explore/AIVideo.png";
 import Blog from "../Images/Explore/Blog.png";
 import GPT from "../Images/Explore/GPT.png";
@@ -10,6 +9,10 @@ import Youtube from "../Images/Explore/Youtube.png";
 import Hubspot from "../Images/Explore/Hubspot.png";
 import MCP from "../Images/Explore/MCP.png";
 import Live from "../Images/Explore/Live.png";
+import Mini from "../Images/Explore/MiniApp.png";
+import Job from "../Images/Explore/AIJob.png";
+import Agenda from "../Images/Explore/Agenda.png";
+
 import AIGlossary from "../Images/Explore/AIGlossary.png";
 import { Link } from "react-router-dom";
 
@@ -24,13 +27,7 @@ const aiToolsData = [
     isNew: true,
     link: "/hub-spot-ai",
   },
-  {
-    id: 10,
-    title: "MCP Servers List",
-    description: "Explore a list of free, high-quality MCP servers.",
-    image: MCP,
-    isNew: true,
-  },
+
   {
     id: 2,
     title: "AI News",
@@ -86,55 +83,82 @@ const aiToolsData = [
     link: "/aitutorials",
   },
   {
+    id: 10,
+    title: "Mini Free Apps",
+    description: "Explore a list of free, high-quality MCP servers.",
+    image: Mini,
+    isNew: true,
+  },
+  {
     id: 11,
-    title: "AI Glossary",
+    title: "AI Job Offers",
     description:
       "Discover the meaning of terms related to artificial intelligence.",
-    image: AIGlossary,
+    image: Job,
   },
   {
     id: 12,
-    title: "Live Events",
+    title: "AI Conference Agenda",
     description:
       "Watch live streams of the most important AI conferences and announcements.",
-    image: Live,
+    image: MCP,
   },
+  // {
+  //   id: 10,
+  //   title: "MCP Servers List",
+  //   description: "Explore a list of free, high-quality MCP servers.",
+  //   image: MCP,
+  //   isNew: true,
+  // },
+  // {
+  //   id: 11,
+  //   title: "AI Glossary",
+  //   description:
+  //     "Discover the meaning of terms related to artificial intelligence.",
+  //   image: AIGlossary,
+  // },
+  // {
+  //   id: 12,
+  //   title: "Live Events",
+  //   description:
+  //     "Watch live streams of the most important AI conferences and announcements.",
+  //   image: Live,
+  // },
 ];
 
 const AICard = ({ title, description, image, isNew, link }) => {
   return (
     <Link to={link}>
-    <div className="relative w-full max-w-[399px] aspect-square bg-[#191919] rounded-[2rem] p-6 overflow-hidden shadow-2xl text-center mx-auto">
-      <div className="absolute md:top-0 -top-20 -right-20 md:right-0 w-32 h-32 bg-[#FA9021] rounded-full blur-[80px] z-0" />
+      <div className="relative w-full max-w-[399px] aspect-square bg-[#191919] rounded-[2rem] p-6 overflow-hidden shadow-2xl text-center mx-auto">
+        <div className="absolute md:top-0 -top-20 -right-20 md:right-0 w-32 h-32 bg-[#FA9021] rounded-full blur-[80px] z-0" />
 
-      <div className="absolute -top-20 -left-2 text-[210px] font-black text-white/5 z-0 select-none">
-        AI
-      </div>
-
-      {isNew && (
-        <div className="absolute md:-top-2 text-white -rotate-40 md:-left-15 bg-[#FA9021] text-black text-xs md:text-[16px] font-bold -top-0.5 -left-5 md:px-20 px-6 py-2 md:py-6 rounded-full z-10 shadow-md uppercase">
-          NEW
+        <div className="absolute -top-20 -left-2 text-[210px] font-black text-white/5 z-0 select-none">
+          AI
         </div>
-      )}
 
-      <img
-        src={image}
-        alt={title}
-        className="-mt-34 md:-mt-20 xl:-mt-10 z-10 relative w-[300px] h-[300px] object-contain mx-auto"
-      />
+        {isNew && (
+          <div className="absolute md:-top-2 text-white -rotate-40 md:-left-15 bg-[#FA9021] text-black text-xs md:text-[16px] font-bold -top-0.5 -left-5 md:px-20 px-6 py-2 md:py-6 rounded-full z-10 shadow-md uppercase">
+            NEW
+          </div>
+        )}
 
-      {/* Title */}
-      <h2 className="text-[#FA9021] font-semibold text-[12px] md:text-[30px] -mt-30 md:-mt-15 z-10 relative">
-        {title}
-      </h2>
+        <img
+          src={image}
+          alt={title}
+          className="-mt-34 md:-mt-20 xl:-mt-10 z-10 relative w-[300px] h-[300px] object-contain mx-auto"
+        />
 
-      {/* Description */}
-      <p className="text-[#767676] font-normal text-[8px] md:text-[14px] md:mt-2 z-10 relative">
-        {description}
-      </p>
-    </div>
+        {/* Title */}
+        <h2 className="text-[#FA9021] font-semibold text-[12px] md:text-[30px] -mt-30 md:-mt-15 z-10 relative">
+          {title}
+        </h2>
+
+        {/* Description */}
+        <p className="text-[#767676] font-normal text-[8px] md:text-[14px] md:mt-2 z-10 relative">
+          {description}
+        </p>
+      </div>
     </Link>
-
   );
 };
 
