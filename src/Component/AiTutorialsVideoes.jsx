@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Search } from "lucide-react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import API_BASE_URL from "../Admin/utils/api";
 import CardComponent from "./CardComponent";
+import { api } from "axiosApi";
 
 const AiTutorialsVideos = () => {
   const [categories, setCategories] = useState([]);
@@ -18,7 +17,7 @@ const AiTutorialsVideos = () => {
 
   const fetchCategories = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/video-categories`);
+      const res = await api.get(`/video-categories/getvideocat`);
       setCategories([{ name: "All", id: 0 }, ...res.data]);
     } catch (err) {
       console.error("Failed to load categories", err);
@@ -27,7 +26,7 @@ const AiTutorialsVideos = () => {
 
   const fetchVideos = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/videos`);
+      const res = await api.get(`/videos/getallvideos`);
       setVideos(res.data);
     } catch (err) {
       console.error("Failed to load videos", err);

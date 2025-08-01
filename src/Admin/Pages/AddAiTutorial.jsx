@@ -1,19 +1,16 @@
-// src/pages/AddVideo.jsx
-
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import Swal from 'sweetalert2';
-import API_BASE_URL from '../utils/api';
-import VideoList from '../Components/VideoList';
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import VideoList from "../Components/VideoList";
 import { api } from "axiosApi";
 
 const AddVideo = () => {
   const [form, setForm] = useState({
-    category: '',
-    title: '',
-    length: '',
-    youtubeLink: '',
-    hashtags: '',
+    category: "",
+    title: "",
+    length: "",
+    youtubeLink: "",
+    hashtags: "",
   });
 
   const [videos, setVideos] = useState([]);
@@ -27,19 +24,21 @@ const AddVideo = () => {
 
   const fetchVideos = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/videos`);
+      const res = await api.get(`/videos/getallvideos`);
       setVideos(res.data);
     } catch (err) {
-      console.error('Failed to load videos', err);
+      console.error("Failed to load videos", err);
+      Swal.fire("Error", "Failed to fetch videos.", "error");
     }
   };
 
   const fetchCategories = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/video-categories`);
+      const res = await api.get(`/video-categories/getvideocat`);
       setVideoCategories(res.data);
     } catch (err) {
-      console.error('Failed to load video categories', err);
+      console.error("Failed to load video categories", err);
+      Swal.fire("Error", "Failed to fetch video categories.", "error");
     }
   };
 
@@ -50,35 +49,55 @@ const AddVideo = () => {
 
   const resetForm = () => {
     setForm({
-      category: '',
-      title: '',
-      length: '',
-      youtubeLink: '',
-      hashtags: '',
+      category: "",
+      title: "",
+      length: "",
+      youtubeLink: "",
+      hashtags: "",
     });
     setEditingId(null);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (
+      !form.category.trim() ||
+      !form.title.trim() ||
+      !form.length.trim() ||
+      !form.youtubeLink.trim()
+    ) {
+      Swal.fire(
+        "Validation Error",
+        "All required fields must be filled.",
+        "warning"
+      );
+      return;
+    }
     const payload = {
       ...form,
-      hashtags: form.hashtags.split(',').map((tag) => tag.trim()),
+      hashtags: form.hashtags
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter((tag) => tag),
     };
 
     try {
       if (editingId) {
-        await axios.put(`${API_BASE_URL}/api/videos/${editingId}`, payload);
-        Swal.fire('Success', 'Video updated!', 'success');
+        await api.put(`/videos/updatevideo/${editingId}`, payload);
+        Swal.fire("Success", "Video updated!", "success");
       } else {
-        await axios.post(`${API_BASE_URL}/api/videos`, payload);
-        Swal.fire('Success', 'Video added!', 'success');
+        await api.post(`/addvideo`, payload);
+        Swal.fire("Success", "Video added!", "success");
       }
 
       fetchVideos();
       resetForm();
     } catch (err) {
-      Swal.fire('Error', err.response?.data?.message || 'Something went wrong', 'error');
+      Swal.fire(
+        "Error",
+        err.response?.data?.message || "Something went wrong",
+        "error"
+      );
     }
   };
 
@@ -88,109 +107,135 @@ const AddVideo = () => {
       title: video.title,
       length: video.length,
       youtubeLink: video.youtubeLink,
-      hashtags: video.hashtags.join(','),
+      hashtags: video.hashtags.join(","),
     });
     setEditingId(video.id);
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this video?')) {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "This will delete the video.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (result.isConfirmed) {
       try {
-        await axios.delete(`${API_BASE_URL}/api/videos/${id}`);
-        Swal.fire('Deleted', 'Video removed.', 'success');
+        await api.delete(`/videos/deletevideo/${id}`);
+        Swal.fire("Deleted", "Video removed.", "success");
         fetchVideos();
       } catch (err) {
-        Swal.fire('Error', 'Failed to delete video', 'error');
+        Swal.fire("Error", "Failed to delete video", "error");
       }
     }
   };
 
   return (
-    <>
-      <h1 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">
-        {editingId ? 'Edit Video' : 'Add Video'}
-      </h1>
+    <div className="font-[Poppins] px-4 py-8 mx-auto max-w-7xl">
+      {/* Header */}
+      <div className="mb-6 bg-gradient-to-r from-gray-900 to-gray-800 text-white p-4 sm:p-6 rounded-xl shadow-lg">
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+          {editingId ? "Edit Video" : "Add Video"}
+        </h1>
+      </div>
 
-      <div className="max-w-7xl mt-10 font-[Poppins]">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Category Dropdown */}
-          <select
-            name="category"
-            value={form.category}
-            onChange={handleChange}
-            className="w-full border px-4 py-2 rounded"
-            required
-          >
-            <option value="" disabled>Select a category</option>
-            {videoCategories.map((cat) => (
-              <option key={cat.id} value={cat.name}>
-                {cat.name}
+      {/* Add Video Form */}
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-xl p-4 sm:p-6 rounded-2xl mb-8"
+      >
+        <div className="space-y-4">
+          <div>
+            <select
+              name="category"
+              value={form.category}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm sm:text-base bg-gray-50 focus:ring-2 focus:ring-gray-600 transition-all"
+              required
+            >
+              <option value="" disabled>
+                Select a category
               </option>
-            ))}
-          </select>
-
-          {/* Other Inputs */}
-          <input
-            name="title"
-            placeholder="Video Title"
-            value={form.title}
-            onChange={handleChange}
-            className="w-full border px-4 py-2 rounded"
-            required
-          />
-
-          <input
-            name="length"
-            placeholder="Length (e.g., 5:30)"
-            value={form.length}
-            onChange={handleChange}
-            className="w-full border px-4 py-2 rounded"
-            required
-          />
-
-          <input
-            name="youtubeLink"
-            placeholder="YouTube Link"
-            value={form.youtubeLink}
-            onChange={handleChange}
-            className="w-full border px-4 py-2 rounded"
-            required
-          />
-
-          <input
-            name="hashtags"
-            placeholder="Hashtags (comma separated) ex: vlog, travel"
-            value={form.hashtags}
-            onChange={handleChange}
-            className="w-full border px-4 py-2 rounded"
-          />
-
-          {/* Buttons */}
-          <div className="flex gap-4">
+              {videoCategories.map((cat) => (
+                <option key={cat.id} value={cat.name}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <input
+              name="title"
+              placeholder="Video Title"
+              value={form.title}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm sm:text-base bg-gray-50 focus:ring-2 focus:ring-gray-600 transition-all"
+              required
+            />
+          </div>
+          <div>
+            <input
+              name="length"
+              placeholder="Length (e.g., 5:30)"
+              value={form.length}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm sm:text-base bg-gray-50 focus:ring-2 focus:ring-gray-600 transition-all"
+              required
+            />
+          </div>
+          <div>
+            <input
+              name="youtubeLink"
+              placeholder="YouTube Link"
+              value={form.youtubeLink}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm sm:text-base bg-gray-50 focus:ring-2 focus:ring-gray-600 transition-all"
+              required
+            />
+          </div>
+          <div>
+            <input
+              name="hashtags"
+              placeholder="Hashtags (comma separated, e.g., vlog, travel)"
+              value={form.hashtags}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm sm:text-base bg-gray-50 focus:ring-2 focus:ring-gray-600 transition-all"
+            />
+          </div>
+          <div className="flex flex-wrap gap-4">
             <button
               type="submit"
-              className="w-[20%] bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+              className="w-full sm:w-auto bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 hover:scale-105 shadow-md"
             >
-              {editingId ? 'Update Video' : 'Add Video'}
+              {editingId ? "Update Video" : "Add Video"}
             </button>
-
             {editingId && (
               <button
                 type="button"
                 onClick={resetForm}
-                className="w-[20%] bg-gray-500 text-white py-2 rounded"
+                className="w-full sm:w-auto bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-all duration-200 hover:scale-105 shadow-md"
               >
                 Cancel
               </button>
             )}
-          </div> 
-        </form> 
-
-        <div className="mt-10">
-          <VideoList videos={videos} onEdit={handleEdit} onDelete={handleDelete} />
+          </div>
         </div>
+      </form>
+
+      {/* Video List */}
+      <div className="bg-white shadow-xl p-4 sm:p-6 rounded-2xl">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">
+          Video List
+        </h2>
+        <VideoList
+          videos={videos}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
       </div>
-    </>
+    </div>
   );
 };
 

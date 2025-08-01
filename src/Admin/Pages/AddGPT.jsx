@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Swal from 'sweetalert2';
-import API_BASE_URL from '../utils/api';
+/* eslint-disable no-unused-vars */
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Swal from "sweetalert2";
+import API_BASE_URL from "../utils/api";
+import { FaRegEdit } from "react-icons/fa";
+import { MdOutlineDeleteOutline } from "react-icons/md";
+import { api } from "../../axiosApi";
 
 const AddGPT = () => {
   const [form, setForm] = useState({
-    title: '',
-    description: '',
-    hashtags: '',
-    link: '',
-    categoryId: '',
+    title: "",
+    description: "",
+    hashtags: "",
+    link: "",
+    categoryId: "",
   });
   const [categories, setCategories] = useState([]);
   const [gptList, setGptList] = useState([]);
@@ -22,19 +26,19 @@ const AddGPT = () => {
 
   const fetchCategories = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/gpt-categories`);
+      const res = await api.get(`/gpt-categories/getgptcategories`);
       setCategories(res.data);
     } catch (err) {
-      console.error('Error loading categories:', err);
+      console.error("Error loading categories:", err);
     }
   };
 
   const fetchGptList = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/gpt`);
+      const res = await api.get(`/gpt/getallgpts`);
       setGptList(res.data);
     } catch (err) {
-      console.error('Error loading GPT list:', err);
+      console.error("Error loading GPT list:", err);
     }
   };
 
@@ -46,30 +50,34 @@ const AddGPT = () => {
     e.preventDefault();
 
     if (!form.categoryId) {
-      Swal.fire('Validation Error', 'Please select a category.', 'warning');
+      Swal.fire("Validation Error", "Please select a category.", "warning");
       return;
     }
 
     try {
       if (editingId) {
-        await axios.put(`${API_BASE_URL}/api/gpt/${editingId}`, form);
-        Swal.fire('Updated!', 'GPT entry updated successfully.', 'success');
+        await api.put(`/gpt/updategpt/${editingId}`, form);
+        Swal.fire("Updated!", "GPT entry updated successfully.", "success");
       } else {
-        await axios.post(`${API_BASE_URL}/api/gpt`, form);
-        Swal.fire('Created!', 'GPT entry added successfully.', 'success');
+        await api.post(`/gpt/addgpt`, form);
+        Swal.fire("Created!", "GPT entry added successfully.", "success");
       }
 
       setForm({
-        title: '',
-        description: '',
-        hashtags: '',
-        link: '',
-        categoryId: '',
+        title: "",
+        description: "",
+        hashtags: "",
+        link: "",
+        categoryId: "",
       });
       setEditingId(null);
       fetchGptList();
     } catch (err) {
-      Swal.fire('Error', err.response?.data?.message || 'Something went wrong.', 'error');
+      Swal.fire(
+        "Error",
+        err.response?.data?.message || "Something went wrong.",
+        "error"
+      );
     }
   };
 
@@ -86,132 +94,180 @@ const AddGPT = () => {
 
   const handleDelete = async (id) => {
     const confirm = await Swal.fire({
-      title: 'Are you sure?',
-      text: 'This GPT entry will be permanently deleted.',
-      icon: 'warning',
+      title: "Are you sure?",
+      text: "This GPT entry will be permanently deleted.",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonText: "Yes, delete it!",
     });
 
     if (confirm.isConfirmed) {
       try {
-        await axios.delete(`${API_BASE_URL}/api/gpt/${id}`);
-        Swal.fire('Deleted!', 'GPT entry deleted.', 'success');
+        await api.delete(`/gpt/deletegpt/${id}`);
+        Swal.fire("Deleted!", "GPT entry deleted.", "success");
         fetchGptList();
       } catch (err) {
-        Swal.fire('Error', 'Failed to delete GPT entry.', 'error');
+        Swal.fire("Error", "Failed to delete GPT entry.", "error");
       }
     }
   };
 
   return (
-    <div className="max-w-7xl mx-auto font-[Poppins] px-4 py-6">
-      
-      <h1 className="text-2xl font-bold mb-4">{editingId ? 'Edit GPT' : 'Add GPT'}</h1>
+    <div className="font-[Poppins] px-4 py-8 mx-auto max-w-7xl">
+      {/* Header */}
+      <div className="mb-6 bg-gradient-to-r from-gray-900 to-gray-800 text-white p-4 sm:p-6 rounded-xl shadow-lg">
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+          {editingId ? "Edit GPT" : "Add GPT"}
+        </h1>
+      </div>
 
-      <form onSubmit={handleSubmit} className="bg-white shadow rounded p-6 mb-10">
-        <input 
-          type="text"
-          name="title"
-          placeholder="Title"
-          value={form.title}
-          onChange={handleChange}
-          className="w-full border px-4 py-2 rounded mb-4"
-          required
-        />
-        <textarea
-          name="description"
-          placeholder="Description"
-          value={form.description}
-          onChange={handleChange}
-          className="w-full border px-4 py-2 rounded mb-4"
-        />
-        <input
-          type="text"
-          name="hashtags"
-          placeholder="#hashtags (comma separated)"
-          value={form.hashtags}
-          onChange={handleChange}
-          className="w-full border px-4 py-2 rounded mb-4"
-        />
-        <input
-          type="text"
-          name="link"
-          placeholder="Link"
-          value={form.link}
-          onChange={handleChange}
-          className="w-full border px-4 py-2 rounded mb-4"
-        />
-
-        <select
-          name="categoryId"
-          value={form.categoryId}
-          onChange={handleChange}
-          className="w-full border px-4 py-2 rounded mb-4"
-          required
-        >
-          <option value="">-- Select Category --</option>
-          {categories.map((cat) => (
-            <option key={cat.id} value={cat.id}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
-
-        <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
-          {editingId ? 'Update GPT' : 'Add GPT'}
-        </button>
+      {/* Form */}
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-xl p-4 sm:p-6 rounded-2xl mb-10"
+      >
+        <div className="space-y-4">
+          <div>
+            <input
+              type="text"
+              name="title"
+              placeholder="Title"
+              value={form.title}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm sm:text-base bg-gray-50 focus:ring-2 focus:ring-gray-600 transition-all"
+              required
+            />
+          </div>
+          <div>
+            <textarea
+              name="description"
+              placeholder="Description"
+              value={form.description}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm sm:text-base bg-gray-50 focus:ring-2 focus:ring-gray-600 transition-all"
+              rows="4"
+            />
+          </div>
+          <div>
+            <input
+              type="text"
+              name="hashtags"
+              placeholder="#hashtags (comma separated)"
+              value={form.hashtags}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm sm:text-base bg-gray-50 focus:ring-2 focus:ring-gray-600 transition-all"
+            />
+          </div>
+          <div>
+            <input
+              type="text"
+              name="link"
+              placeholder="Link"
+              value={form.link}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm sm:text-base bg-gray-50 focus:ring-2 focus:ring-gray-600 transition-all"
+            />
+          </div>
+          <div>
+            <select
+              name="categoryId"
+              value={form.categoryId}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm sm:text-base bg-gray-50 focus:ring-2 focus:ring-gray-600 transition-all"
+              required
+            >
+              <option value="">-- Select Category --</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button
+            type="submit"
+            className="w-full sm:w-auto bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 hover:scale-105 shadow-md"
+          >
+            {editingId ? "Update GPT" : "Add GPT"}
+          </button>
+        </div>
       </form>
 
       {/* GPT List */}
-      <div className="bg-white p-6 rounded shadow">
-        <h2 className="text-xl font-semibold mb-4">GPT List</h2>
-        <table className="w-full border">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="p-2 text-left">Title</th>
-              <th className="p-2 text-left">Category</th>
-              <th className="p-2 text-left">Hashtags</th>
-              <th className="p-2 text-left">Link</th>
-              <th className="p-2 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {gptList.map((gpt) => (
-              <tr key={gpt.id} className="border-t">
-                <td className="p-2">{gpt.title}</td>
-                <td className="p-2">{gpt.GPTCategory?.name || 'N/A'}</td>
-                <td className="p-2">{gpt.hashtags}</td>
-                <td className="p-2">
-                  <a href={gpt.link} target="_blank" rel="noreferrer" className="text-blue-600 underline">
-                    Visit
-                  </a>
-                </td>
-                <td className="p-2 text-right">
-                  <button
-                    onClick={() => handleEdit(gpt)}
-                    className="text-sm text-blue-600 hover:underline mr-2"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(gpt.id)}
-                    className="text-sm text-red-600 hover:underline"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {gptList.length === 0 && (
+      <div className="bg-white shadow-xl p-4 sm:p-6 rounded-2xl">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">
+          GPT List
+        </h2>
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-left text-sm sm:text-base">
+            <thead className="bg-gray-100">
               <tr>
-                <td colSpan="5" className="text-center py-4">
-                  No GPT data available.
-                </td>
+                <th className="py-3 px-4 font-semibold text-gray-700">Title</th>
+                <th className="py-3 px-4 font-semibold text-gray-700">
+                  Category
+                </th>
+                <th className="py-3 px-4 font-semibold text-gray-700">
+                  Hashtags
+                </th>
+                <th className="py-3 px-4 font-semibold text-gray-700">Link</th>
+                <th className="py-3 px-4 font-semibold text-gray-700 text-right">
+                  Actions
+                </th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {gptList.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan="5"
+                    className="py-6 px-4 text-center text-gray-500"
+                  >
+                    No GPT data available.
+                  </td>
+                </tr>
+              ) : (
+                gptList.map((gpt) => (
+                  <tr
+                    key={gpt.id}
+                    className="border-t hover:bg-gray-50 transition-all duration-200"
+                  >
+                    <td className="py-3 px-4 text-gray-900">{gpt.title}</td>
+                    <td className="py-3 px-4 text-gray-700">
+                      {gpt.GPTCategory?.name || "N/A"}
+                    </td>
+                    <td className="py-3 px-4 text-gray-700">{gpt.hashtags}</td>
+                    <td className="py-3 px-4">
+                      <a
+                        href={gpt.link}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-blue-600 hover:text-blue-800 transition-colors"
+                      >
+                        Visit
+                      </a>
+                    </td>
+                    <td className="py-3 px-4 text-right space-x-3">
+                      <button
+                        onClick={() => handleEdit(gpt)}
+                        className="text-blue-600 hover:text-blue-800 transition-colors flex items-center gap-1"
+                      >
+                        <FaRegEdit size={18} />
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(gpt.id)}
+                        className="text-red-600 hover:text-red-800 transition-colors flex items-center gap-1"
+                      >
+                        <MdOutlineDeleteOutline size={20} />
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

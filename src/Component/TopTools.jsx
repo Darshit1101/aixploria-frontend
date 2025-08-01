@@ -2,9 +2,8 @@
 import { useState, useEffect } from "react";
 import { Search, X } from "lucide-react";
 import FeaturedCard from "./FeaturedCard";
-import axios from "axios";
-import API_BASE_URL from "../Admin/utils/api";
 import { useNavigate } from "react-router-dom";
+import { api } from "axiosApi";
 
 const TopTools = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -23,7 +22,7 @@ const TopTools = () => {
 
   const fetchCategories = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/categories`);
+      const res = await api.get(`/categories/getallcategories`);
       setCategories(res.data);
     } catch (err) {
       console.error("Failed to load categories", err);
@@ -32,7 +31,7 @@ const TopTools = () => {
 
   const fetchRecentTools = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/cards`);
+      const res = await api.get(`/cards/getallcards`);
       const verifiedTools = res.data
         .filter((tool) => tool.isVerified === true)
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))

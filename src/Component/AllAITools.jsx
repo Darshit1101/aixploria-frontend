@@ -1,8 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { ChevronUp } from "lucide-react";
 import { IoMdStar } from "react-icons/io";
-import API_BASE_URL from "../Admin/utils/api";
-import axios from "axios";
+import { api } from "axiosApi";
 
 export default function AllAITools() {
   const [tools, setTools] = useState([]);
@@ -15,7 +14,7 @@ export default function AllAITools() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await axios.get(`${API_BASE_URL}/api/categories`);
+        const res = await api.get(`/categories/getallcategories`);
         const fetchedCategories = res.data.map((cat) => cat.name);
         setCategories(["All", ...fetchedCategories]); // Include "All" as the first option
       } catch (error) {
@@ -29,7 +28,7 @@ export default function AllAITools() {
   useEffect(() => {
     const fetchTools = async () => {
       try {
-        const res = await axios.get(`${API_BASE_URL}/api/cards`);
+        const res = await api.get(`/cards/getallcards`);
         const fetchedTools = res.data.map((tool) => ({
           id: tool.id,
           name: tool.name,

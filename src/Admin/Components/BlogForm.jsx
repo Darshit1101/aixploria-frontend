@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { api } from "axiosApi";
 
 const Blog = () => {
   const [blogs, setBlogs] = useState([]);
@@ -19,7 +19,7 @@ const Blog = () => {
 
   const fetchBlogs = async () => {
     try {
-      const res = await axios.get('/api/blogs');
+      const res = await api.get('/blogs/getallblog');
       setBlogs(res.data);
     } catch (err) {
       console.error('Error fetching blogs:', err);
@@ -73,7 +73,7 @@ const Blog = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/api/blogs/${id}`);
+      await api.delete(`/blogs/deleteblog/${id}`);
       fetchBlogs();
     } catch (err) {
       console.error('Error deleting blog:', err);
@@ -84,9 +84,9 @@ const Blog = () => {
     e.preventDefault();
     try {
       if (editingId) {
-        await axios.put(`/api/blogs/${editingId}`, form);
+        await api.put(`/blogs/updateblog/${editingId}`, form);
       } else {
-        await axios.post('/api/blogs', form);
+        await api.post('/blogs/addblog', form);
       }
       fetchBlogs();
       resetForm();

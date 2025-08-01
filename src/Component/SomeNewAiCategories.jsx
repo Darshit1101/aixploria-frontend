@@ -2,9 +2,8 @@
 import { useEffect, useState, useRef } from "react";
 import { ChevronUp } from "lucide-react";
 import { IoMdStar } from "react-icons/io";
-import API_BASE_URL from "../Admin/utils/api"; // Import API base URL for consistency
-import axios from "axios";
 import { Link } from "react-router-dom";
+import { api } from "axiosApi";
 
 export default function SomeAICategories() {
   const [tools, setTools] = useState([]);
@@ -17,9 +16,7 @@ export default function SomeAICategories() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await axios.get(
-          `${API_BASE_URL}/api/categories/getsomecategories`
-        );
+        const res = await api.get(`/categories/getsomecategories`);
         const fetchedCategories = res.data.map((cat) => cat.name);
         console.log(res.data, "res");
 
@@ -39,7 +36,7 @@ export default function SomeAICategories() {
   useEffect(() => {
     const fetchTools = async () => {
       try {
-        const res = await axios.get(`${API_BASE_URL}/api/cards`);
+        const res = await api.get(`/cards/getallcards`);
         const fetchedTools = res.data.map((tool) => ({
           id: tool.id,
           name: tool.name,

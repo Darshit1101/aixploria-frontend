@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import FeaturedCard from "../Component/FeaturedCard";
 import API_BASE_URL from "../Admin/utils/api";
 import axios from "axios";
+import { api } from "axiosApi";
 
 const CategoryPage = () => {
   const { categoryName } = useParams();
@@ -14,7 +15,7 @@ const CategoryPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`${API_BASE_URL}/api/cards`);
+        const res = await api.get(`/cards/getallcards`);
         const allTools = res.data;
 
         // ✅ Extract and normalize all valid unique categories
@@ -79,7 +80,12 @@ const CategoryPage = () => {
               <FeaturedCard
                 key={tool.id}
                 name={tool.name}
-                logo={`${API_BASE_URL}${tool.image}`}
+                logo={
+                  tool.image.startsWith("http") ||
+                  tool.image.startsWith("https")
+                    ? tool.image
+                    : `https://${tool.image}`
+                }
                 description={tool.description}
                 ranking={tool.views}
                 verified={tool.verified}

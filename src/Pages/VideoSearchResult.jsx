@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
-import API_BASE_URL from "../Admin/utils/api";
 import CardComponent from "../Component/CardComponent";
+import { api } from "axiosApi";
 
 const VideoSearchResults = () => {
   const location = useLocation();
@@ -18,7 +17,7 @@ const VideoSearchResults = () => {
 
   const fetchVideos = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/videos`);
+      const res = await api.get(`/videos/getallvideos`);
       setVideos(res.data);
     } catch (err) {
       console.error("Error fetching videos", err);
@@ -27,7 +26,7 @@ const VideoSearchResults = () => {
 
   const fetchCategories = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/video-categories`);
+      const res = await api.get(`/video-categories/getvideocat`);
       setCategories([{ name: "All", id: 0 }, ...res.data]);
     } catch (err) {
       console.error("Error fetching categories", err);

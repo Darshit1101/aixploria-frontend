@@ -7,6 +7,7 @@ import { FaRegEdit } from "react-icons/fa";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { IoSaveOutline } from "react-icons/io5";
 import { FiUploadCloud } from "react-icons/fi";
+import { api } from "../../axiosApi";
 
 const AddHubspot = () => {
   const [form, setForm] = useState({
@@ -26,8 +27,7 @@ const AddHubspot = () => {
 
   const fetchHubspots = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/hubspot`);
-      console.log(res.data.data, "dataaa");
+      const res = await api.get(`/hubspot/gethubspot`);
       setHubspots(res.data.data || []);
     } catch (error) {
       setHubspots([]);
@@ -64,6 +64,19 @@ const AddHubspot = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Validate title, link, and image
+    if (!form.title.trim() || !form.link.trim()) {
+      Swal.fire(
+        "Validation Error",
+        "Title and link cannot be empty.",
+        "warning"
+      );
+      return;
+    }
+    if (!form.image && !editingId) {
+      Swal.fire("Validation Error", "Please select an image.", "warning");
+      return;
+    }
     try {
       const formData = new FormData();
       formData.append("title", form.title);
@@ -71,19 +84,19 @@ const AddHubspot = () => {
       formData.append("link", form.link);
       formData.append(
         "options",
-        options.filter((opt) => opt.trim().length > 0)
+        JSON.stringify(options.filter((opt) => opt.trim().length > 0))
       );
       if (form.image) {
         formData.append("image", form.image);
       }
 
       if (editingId) {
-        await axios.put(`${API_BASE_URL}/api/hubspot/${editingId}`, formData, {
+        await api.put(`/hubspot/updatehubspot/${editingId}`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
         Swal.fire("Updated", "HubSpot Updated", "success");
       } else {
-        await axios.post(`${API_BASE_URL}/api/hubspot`, formData, {
+        await api.post(`/hubspot/addhubspot`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
         Swal.fire("Success!", "HubSpot Added", "success");
@@ -127,7 +140,7 @@ const AddHubspot = () => {
 
     if (result.isConfirmed) {
       try {
-        await axios.delete(`${API_BASE_URL}/api/hubspot/${id}`);
+        await api.delete(`/hubspot/deletehubspot/${id}`);
         Swal.fire("Deleted!", "Entry deleted", "success");
         fetchHubspots();
       } catch (error) {
@@ -137,13 +150,20 @@ const AddHubspot = () => {
   };
 
   return (
-    <div className="font-[Poppins] p-4 md:p-8">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">
-        {editingId ? "Edit Hubspot" : "Add Hubspot"}
-      </h1>
+    <div className="font-[Poppins] px-4 py-8 mx-auto max-w-7xl">
+      {/* Header */}
+      <div className="mb-6 bg-gradient-to-r from-gray-900 to-gray-800 text-white p-4 sm:p-6 rounded-xl shadow-lg">
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+          {editingId ? "Edit Hubspot" : "Add Hubspot"}
+        </h1>
+      </div>
 
-      <div className="max-w-7xl p-6 bg-white shadow rounded mb-10">
-        <form onSubmit={handleSubmit}>
+      {/* Add Hubspot Form */}
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-xl p-4 sm:p-6 rounded-2xl mb-8"
+      >
+        <div className="space-y-4">
           <div className="group relative h-64 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200 hover:border-blue-400 transition-colors cursor-pointer">
             <input
               type="file"
@@ -178,46 +198,55 @@ const AddHubspot = () => {
               )}
             </label>
           </div>
-          <input
-            type="text"
-            name="title"
-            placeholder="Title"
-            value={form.title}
-            onChange={handleFormChange}
-            className="w-full border px-4 py-2 rounded mb-4"
-            required
-          />
-          <textarea
-            name="description"
-            placeholder="Description"
-            value={form.description}
-            onChange={handleFormChange}
-            className="w-full border px-4 py-2 rounded mb-4"
-          />
-          <input
-            type="text"
-            name="link"
-            placeholder="Link"
-            value={form.link}
-            onChange={handleFormChange}
-            className="w-full border px-4 py-2 rounded mb-4"
-          />
-
-          <div className="mb-4">
-            <label className="block mb-2 font-medium">Options</label>
+          <div>
+            <input
+              type="text"
+              name="title"
+              placeholder="Title"
+              value={form.title}
+              onChange={handleFormChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm sm:text-base bg-gray-50 focus:ring-2 focus:ring-gray-600 transition-all"
+              required
+            />
+          </div>
+          <div>
+            <textarea
+              name="description"
+              placeholder="Description"
+              value={form.description}
+              onChange={handleFormChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm sm:text-base bg-gray-50 focus:ring-2 focus:ring-gray-600 transition-all"
+              rows="4"
+            />
+          </div>
+          <div>
+            <input
+              type="url"
+              name="link"
+              placeholder="Link"
+              value={form.link}
+              onChange={handleFormChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm sm:text-base bg-gray-50 focus:ring-2 focus:ring-gray-600 transition-all"
+              required
+            />
+          </div>
+          <div>
+            <label className="block mb-2 font-medium text-gray-700">
+              Options
+            </label>
             {options.map((opt, index) => (
               <div key={index} className="flex gap-2 mb-2">
                 <input
                   type="text"
                   value={opt}
                   onChange={(e) => handleOptionChange(index, e.target.value)}
-                  className="flex-1 border px-4 py-2 rounded"
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-sm sm:text-base bg-gray-50 focus:ring-2 focus:ring-gray-600 transition-all"
                 />
                 {options.length > 1 && (
                   <button
                     type="button"
                     onClick={() => removeOption(index)}
-                    className="text-red-500 font-bold"
+                    className="text-red-600 hover:text-red-800 font-bold transition-colors"
                   >
                     ×
                   </button>
@@ -227,15 +256,14 @@ const AddHubspot = () => {
             <button
               type="button"
               onClick={addOption}
-              className="text-blue-600 hover:underline text-sm mt-1"
+              className="text-blue-600 hover:text-blue-800 text-sm mt-1 transition-colors"
             >
               + Add Option
             </button>
           </div>
-
           <button
             type="submit"
-            className="w-[300px] bg-orange-500 text-white py-2 rounded hover:bg-blue-700"
+            className="w-full sm:w-auto bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 hover:scale-105 shadow-md"
           >
             {editingId ? (
               <div className="flex items-center justify-center">
@@ -245,85 +273,104 @@ const AddHubspot = () => {
               "Add Hubspot"
             )}
           </button>
-        </form>
-      </div>
+        </div>
+      </form>
 
-      <div className="max-w-7xl bg-white shadow rounded p-6">
-        <h2 className="text-xl font-semibold mb-4">Hubspot List</h2>
-        <table className="w-full table-auto border border-gray-200">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="px-4 py-2 text-left">#</th>
-              <th className="px-4 py-2 text-left">Image</th>
-              <th className="px-4 py-2 text-left">Title</th>
-              <th className="px-4 py-2 text-left">Description</th>
-              <th className="px-4 py-2 text-left">Link</th>
-              <th className="px-4 py-2 text-left">Options</th>
-              <th className="px-4 py-2 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {hubspots.length === 0 ? (
+      {/* Hubspot List */}
+      <div className="bg-white shadow-xl p-4 sm:p-6 rounded-2xl">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">
+          Hubspot List
+        </h2>
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-left text-sm sm:text-base">
+            <thead className="bg-gray-100">
               <tr>
-                <td colSpan="7" className="text-center py-4">
-                  Koi data nahi hai.
-                </td>
+                <th className="py-3 px-4 font-semibold text-gray-700">#</th>
+                <th className="py-3 px-4 font-semibold text-gray-700">Image</th>
+                <th className="py-3 px-4 font-semibold text-gray-700">Title</th>
+                <th className="py-3 px-4 font-semibold text-gray-700">
+                  Description
+                </th>
+                <th className="py-3 px-4 font-semibold text-gray-700">Link</th>
+                <th className="py-3 px-4 font-semibold text-gray-700">
+                  Options
+                </th>
+                <th className="py-3 px-4 font-semibold text-gray-700 text-right">
+                  Actions
+                </th>
               </tr>
-            ) : (
-              hubspots?.map((item, index) => (
-                <tr key={item.id} className="border-t">
-                  <td className="px-4 py-2">{index + 1}</td>
-                  <td className="px-4 py-2">
-                    {item.image ? (
-                      <img
-                        src={`${API_BASE_URL}/${item.image}`}
-                        alt={item.title}
-                        className="w-16 h-16 object-contain rounded"
-                      />
-                    ) : (
-                      "No Image"
-                    )}
+            </thead>
+            <tbody>
+              {hubspots.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan="7"
+                    className="py-6 px-4 text-center text-gray-500"
+                  >
+                    No hubspot entries found.
                   </td>
-                  <td className="px-4 py-2">{item.title}</td>
-                  <td className="px-4 py-2">{item.description}</td>
-                  <td className="px-4 py-2">
-                    <a
-                      href={item.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-500 underline"
-                    >
-                      {item.link}
-                    </a>
-                  </td>
-                  <td className="px-4 py-2">
-                    <ul className="list-disc pl-4 text-sm text-gray-700">
-                      {item?.options?.map((opt, idx) => (
-                        <li key={idx}>{opt}</li>
-                      ))}
-                    </ul>
-                  </td>
-                  <td className="px-4 py-2 text-right">
-                    <div className="flex justify-end space-x-2">
+                </tr>
+              ) : (
+                hubspots?.map((item, index) => (
+                  <tr
+                    key={item.id}
+                    className="border-t hover:bg-gray-50 transition-all duration-200"
+                  >
+                    <td className="py-3 px-4 text-gray-700">{index + 1}</td>
+                    <td className="py-3 px-4">
+                      {item.image ? (
+                        <img
+                          src={`${API_BASE_URL}/${item.image}`}
+                          alt={item.title}
+                          className="w-16 h-16 object-contain rounded-lg"
+                        />
+                      ) : (
+                        <span className="text-gray-500">No Image</span>
+                      )}
+                    </td>
+                    <td className="py-3 px-4 text-gray-900">{item.title}</td>
+                    <td className="py-3 px-4 text-gray-900">
+                      {item.description}
+                    </td>
+                    <td className="py-3 px-4">
+                      <a
+                        href={item.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800 transition-colors"
+                      >
+                        {item.link}
+                      </a>
+                    </td>
+                    <td className="py-3 px-4">
+                      <ul className="list-disc pl-4 text-sm text-gray-700">
+                        {item?.options?.map((opt, idx) => (
+                          <li key={idx}>{opt}</li>
+                        ))}
+                      </ul>
+                    </td>
+                    <td className="py-3 px-4 text-right space-x-3">
                       <button
                         onClick={() => handleEdit(item)}
-                        className="flex items-center bg-blue-600 text-white px-2 py-1 rounded-full hover:underline"
+                        className="flex items-center gap-1 text-blue-600 hover:text-blue-800 transition-colors"
                       >
-                        <FaRegEdit className="mr-1" /> Edit
+                        <FaRegEdit size={18} />
+                        Edit
                       </button>
                       <button
                         onClick={() => handleDelete(item.id)}
-                        className="flex items-center bg-red-600 text-white px-2 py-1 rounded-full hover:underline"
+                        className="flex items-center gap-1 text-red-600 hover:text-red-800 transition-colors"
                       >
-                        <MdOutlineDeleteOutline className="mr-1" /> Delete
+                        <MdOutlineDeleteOutline size={20} />
+                        Delete
                       </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

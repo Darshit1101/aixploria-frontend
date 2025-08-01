@@ -1,17 +1,18 @@
-// src/pages/AddVideoCategory.jsx
-
-import React, { useState, useEffect } from 'react';
-import Swal from 'sweetalert2';
-import { FaRegEdit } from 'react-icons/fa';
-import { MdOutlineDeleteOutline } from 'react-icons/md';
-import { IoSaveOutline } from 'react-icons/io5';
-import { api } from 'axiosApi';
+/* eslint-disable no-unused-vars */
+import React, { useState, useEffect } from "react";
+import Swal from "sweetalert2";
+import { FaRegEdit } from "react-icons/fa";
+import { MdOutlineDeleteOutline } from "react-icons/md";
+import { IoSaveOutline } from "react-icons/io5";
+import { api } from "axiosApi";
+import axios from "axios";
+import API_BASE_URL from "../utils/api";
 
 const AddVideoCategory = () => {
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const [categories, setCategories] = useState([]);
   const [editingId, setEditingId] = useState(null);
-  const [editingName, setEditingName] = useState('');
+  const [editingName, setEditingName] = useState("");
 
   useEffect(() => {
     fetchVideoCategories();
@@ -19,41 +20,58 @@ const AddVideoCategory = () => {
 
   const fetchVideoCategories = async () => {
     try {
-      const res = await api.get('/video-categories');
+      const res = await api.get("/video-categories/getvideocat");
       setCategories(res.data);
     } catch (error) {
-      console.error('Error fetching video categories', error);
+      console.error("Error fetching video categories", error);
+      Swal.fire("Error", "Failed to fetch video categories.", "error");
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post('/video-categories', { name });
-      Swal.fire('Success', res.data.message || 'Video category added!', 'success');
-      setName('');
+      if (!name.trim()) {
+        Swal.fire(
+          "Validation Error",
+          "Video category name cannot be empty.",
+          "warning"
+        );
+        return;
+      }
+      const res = await api.post(`/video-categories/addvideocat`, { name });
+      Swal.fire(
+        "Success",
+        res.data.message || "Video category added!",
+        "success"
+      );
+      setName("");
       fetchVideoCategories();
     } catch (error) {
-      Swal.fire('Error', error.response?.data?.message || 'Something went wrong', 'error');
+      Swal.fire(
+        "Error",
+        error.response?.data?.message || "Something went wrong",
+        "error"
+      );
     }
   };
 
   const handleDelete = async (id) => {
     const result = await Swal.fire({
-      title: 'Are you sure?',
-      text: 'This will delete the video category.',
-      icon: 'warning',
+      title: "Are you sure?",
+      text: "This will delete the video category.",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonText: "Yes, delete it!",
     });
 
     if (result.isConfirmed) {
       try {
-        await api.delete(`/video-categories/${id}`);
-        Swal.fire('Deleted!', 'Video category deleted.', 'success');
+        await api.delete(`/video-categories/delete/${id}`);
+        Swal.fire("Deleted!", "Video category deleted.", "success");
         fetchVideoCategories();
       } catch (error) {
-        Swal.fire('Error', 'Failed to delete video category.', 'error');
+        Swal.fire("Error", "Failed to delete video category.", "error");
       }
     }
   };
@@ -65,104 +83,134 @@ const AddVideoCategory = () => {
 
   const handleUpdate = async (id) => {
     try {
-      await api.put(`/video-categories/${id}`, { name: editingName });
-      Swal.fire('Updated!', 'Video category updated.', 'success');
+      if (!editingName.trim()) {
+        Swal.fire(
+          "Validation Error",
+          "Video category name cannot be empty.",
+          "warning"
+        );
+        return;
+      }
+      await api.put(`/video-categories/update/${id}`, { name: editingName });
+      Swal.fire("Updated!", "Video category updated.", "success");
       setEditingId(null);
-      setEditingName('');
+      setEditingName("");
       fetchVideoCategories();
     } catch (error) {
-      Swal.fire('Error', 'Update failed.', 'error');
+      Swal.fire("Error", "Update failed.", "error");
     }
   };
 
   return (
-    <div className="font-[Poppins]">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">Add Video Category</h1>
+    <div className="font-[Poppins] px-4 py-8 mx-auto max-w-7xl">
+      {/* Header */}
+      <div className="mb-6 bg-gradient-to-r from-gray-900 to-gray-800 text-white p-4 sm:p-6 rounded-xl shadow-lg">
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+          {editingId ? "Edit Video Category" : "Add Video Category"}
+        </h1>
+      </div>
 
-      <div className="max-w-7xl p-6 bg-white shadow rounded mb-10">
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Video Category Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full border border-gray-300 px-4 py-2 rounded mb-4"
-            required
-          />
+      {/* Add Video Category Form */}
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-xl p-4 sm:p-6 rounded-2xl mb-8"
+      >
+        <div className="space-y-4">
+          <div>
+            <input
+              type="text"
+              placeholder="Video Category Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm sm:text-base bg-gray-50 focus:ring-2 focus:ring-gray-600 transition-all"
+              required
+            />
+          </div>
           <button
             type="submit"
-            className="w-[300px] bg-orange-500 text-white py-2 rounded hover:bg-orange-600"
+            className="w-full sm:w-auto bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 hover:scale-105 shadow-md"
           >
             Add Video Category
           </button>
-        </form>
-      </div>
+        </div>
+      </form>
 
-      <div className="max-w-7xl bg-white shadow rounded p-6">
-        <h2 className="text-xl font-semibold mb-4">Video Category List</h2>
-        <table className="w-full table-auto border border-gray-200">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="px-4 py-2 text-left">#</th>
-              <th className="px-4 py-2 text-left">Name</th>
-              <th className="px-4 py-2 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {categories.length === 0 ? (
+      {/* Video Category List */}
+      <div className="bg-white shadow-xl p-4 sm:p-6 rounded-2xl">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">
+          Video Category List
+        </h2>
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-left text-sm sm:text-base">
+            <thead className="bg-gray-100">
               <tr>
-                <td colSpan="3" className="text-center py-4">
-                  No video categories found.
-                </td>
+                <th className="py-3 px-4 font-semibold text-gray-700">#</th>
+                <th className="py-3 px-4 font-semibold text-gray-700">Name</th>
+                <th className="py-3 px-4 font-semibold text-gray-700 text-right">
+                  Actions
+                </th>
               </tr>
-            ) : (
-              categories.map((cat, index) => (
-                <tr key={cat.id} className="border-t">
-                  <td className="px-4 py-2">{index + 1}</td>
-                  <td className="px-4 py-2">
-                    {editingId === cat.id ? (
-                      <input
-                        value={editingName}
-                        onChange={(e) => setEditingName(e.target.value)}
-                        className="border px-2 py-1 rounded w-full"
-                      />
-                    ) : (
-                      cat.name
-                    )}
+            </thead>
+            <tbody>
+              {categories.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan="3"
+                    className="py-6 px-4 text-center text-gray-500"
+                  >
+                    No video categories found.
                   </td>
-                  <td className="px-4 py-2 text-right">
-                    <div className="flex justify-end space-x-2">
+                </tr>
+              ) : (
+                categories.map((cat, index) => (
+                  <tr
+                    key={cat.id}
+                    className="border-t hover:bg-gray-50 transition-all duration-200"
+                  >
+                    <td className="py-3 px-4 text-gray-700">{index + 1}</td>
+                    <td className="py-3 px-4 text-gray-900">
+                      {editingId === cat.id ? (
+                        <input
+                          value={editingName}
+                          onChange={(e) => setEditingName(e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm sm:text-base bg-gray-50 focus:ring-2 focus:ring-gray-600 transition-all"
+                        />
+                      ) : (
+                        cat.name
+                      )}
+                    </td>
+                    <td className="py-3 px-4 text-right space-x-3">
                       {editingId === cat.id ? (
                         <button
                           onClick={() => handleUpdate(cat.id)}
-                          className="flex items-center bg-green-600 text-white px-2 py-1 rounded-full hover:bg-green-700"
+                          className="flex items-center gap-1 text-green-600 hover:text-green-800 transition-colors"
                         >
-                          <IoSaveOutline className="mr-1" />
+                          <IoSaveOutline size={20} />
                           Save
                         </button>
                       ) : (
                         <button
                           onClick={() => handleEdit(cat.id, cat.name)}
-                          className="flex items-center bg-blue-600 text-white px-2 py-1 rounded-full hover:bg-blue-700"
+                          className="flex items-center gap-1 text-blue-600 hover:text-blue-800 transition-colors"
                         >
-                          <FaRegEdit className="mr-1" />
+                          <FaRegEdit size={18} />
                           Edit
                         </button>
                       )}
                       <button
                         onClick={() => handleDelete(cat.id)}
-                        className="flex items-center bg-red-600 text-white px-2 py-1 rounded-full hover:bg-red-700"
+                        className="flex items-center gap-1 text-red-600 hover:text-red-800 transition-colors"
                       >
-                        <MdOutlineDeleteOutline className="mr-1" />
+                        <MdOutlineDeleteOutline size={20} />
                         Delete
                       </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -25,11 +26,16 @@ const NewsManager = () => {
       setNewsList(res.data);
     } catch (err) {
       console.error('Error fetching news:', err);
+      Swal.fire('Error', 'Failed to fetch news.', 'error');
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!title.trim() || !link.trim()) {
+      Swal.fire('Validation Error', 'Title and link cannot be empty.', 'warning');
+      return;
+    }
     try {
       await api.post(`/news/createNews`, { title, link });
       Swal.fire('Success', 'News added successfully!', 'success');
@@ -68,6 +74,10 @@ const NewsManager = () => {
   };
 
   const handleUpdate = async (id) => {
+    if (!editingTitle.trim() || !editingLink.trim()) {
+      Swal.fire('Validation Error', 'Title and link cannot be empty.', 'warning');
+      return;
+    }
     try {
       await api.put(`/news/updateNews/${id}`, { title: editingTitle, link: editingLink });
       Swal.fire('Updated!', 'News updated.', 'success');
@@ -81,120 +91,142 @@ const NewsManager = () => {
   };
 
   return (
-    <div className="font-[Poppins]">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">News Manager</h1>
+    <div className="font-[Poppins] px-4 py-8 mx-auto max-w-7xl">
+      {/* Header */}
+      <div className="mb-6 bg-gradient-to-r from-gray-900 to-gray-800 text-white p-4 sm:p-6 rounded-xl shadow-lg">
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+          {editingId ? 'Edit News' : 'News Manager'}
+        </h1>
+      </div>
 
-      <div className="max-w-7xl p-6 bg-white shadow rounded mb-10">
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="News Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full border border-gray-300 px-4 py-2 rounded mb-4"
-            required
-          />
-          <input
-            type="url"
-            placeholder="News Link"
-            value={link}
-            onChange={(e) => setLink(e.target.value)}
-            className="w-full border border-gray-300 px-4 py-2 rounded mb-4"
-            required
-          />
+      {/* Add News Form */}
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-xl p-4 sm:p-6 rounded-2xl mb-8"
+      >
+        <div className="space-y-4">
+          <div>
+            <input
+              type="text"
+              placeholder="News Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm sm:text-base bg-gray-50 focus:ring-2 focus:ring-gray-600 transition-all"
+              required
+            />
+          </div>
+          <div>
+            <input
+              type="url"
+              placeholder="News Link"
+              value={link}
+              onChange={(e) => setLink(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm sm:text-base bg-gray-50 focus:ring-2 focus:ring-gray-600 transition-all"
+              required
+            />
+          </div>
           <button
             type="submit"
-            className="w-[300px] bg-orange-500 text-white py-2 rounded hover:bg-orange-600"
+            className="w-full sm:w-auto bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 hover:scale-105 shadow-md"
           >
             Add News
           </button>
-        </form>
-      </div>
+        </div>
+      </form>
 
-      <div className="max-w-7xl bg-white shadow rounded p-6">
-        <h2 className="text-xl font-semibold mb-4">News List</h2>
-        <table className="w-full table-auto border border-gray-200">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="px-4 py-2 text-left">#</th>
-              <th className="px-4 py-2 text-left">Title</th>
-              <th className="px-4 py-2 text-left">Link</th>
-              <th className="px-4 py-2 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {newsList.length === 0 ? (
+      {/* News List */}
+      <div className="bg-white shadow-xl p-4 sm:p-6 rounded-2xl">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">
+          News List
+        </h2>
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-left text-sm sm:text-base">
+            <thead className="bg-gray-100">
               <tr>
-                <td colSpan="4" className="text-center py-4">
-                  No news articles found.
-                </td>
+                <th className="py-3 px-4 font-semibold text-gray-700">#</th>
+                <th className="py-3 px-4 font-semibold text-gray-700">Title</th>
+                <th className="py-3 px-4 font-semibold text-gray-700">Link</th>
+                <th className="py-3 px-4 font-semibold text-gray-700 text-right">Actions</th>
               </tr>
-            ) : (
-              newsList.map((item, index) => (
-                <tr key={item.id} className="border-t">
-                  <td className="px-4 py-2">{index + 1}</td>
-                  <td className="px-4 py-2">
-                    {editingId === item.id ? (
-                      <input
-                        value={editingTitle}
-                        onChange={(e) => setEditingTitle(e.target.value)}
-                        className="border px-2 py-1 rounded w-full"
-                      />
-                    ) : (
-                      item.title
-                    )}
+            </thead>
+            <tbody>
+              {newsList.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan="4"
+                    className="py-6 px-4 text-center text-gray-500"
+                  >
+                    No news articles found.
                   </td>
-                  <td className="px-4 py-2">
-                    {editingId === item.id ? (
-                      <input
-                        value={editingLink}
-                        onChange={(e) => setEditingLink(e.target.value)}
-                        className="border px-2 py-1 rounded w-full"
-                      />
-                    ) : (
-                      <a
-                        href={item.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 underline"
-                      >
-                        {item.link}
-                      </a>
-                    )}
-                  </td>
-                  <td className="px-4 py-2 text-right">
-                    <div className="flex justify-end space-x-2">
+                </tr>
+              ) : (
+                newsList.map((item, index) => (
+                  <tr
+                    key={item.id}
+                    className="border-t hover:bg-gray-50 transition-all duration-200"
+                  >
+                    <td className="py-3 px-4 text-gray-700">{index + 1}</td>
+                    <td className="py-3 px-4 text-gray-900">
+                      {editingId === item.id ? (
+                        <input
+                          value={editingTitle}
+                          onChange={(e) => setEditingTitle(e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm sm:text-base bg-gray-50 focus:ring-2 focus:ring-gray-600 transition-all"
+                        />
+                      ) : (
+                        item.title
+                      )}
+                    </td>
+                    <td className="py-3 px-4 text-gray-900">
+                      {editingId === item.id ? (
+                        <input
+                          value={editingLink}
+                          onChange={(e) => setEditingLink(e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm sm:text-base bg-gray-50 focus:ring-2 focus:ring-gray-600 transition-all"
+                        />
+                      ) : (
+                        <a
+                          href={item.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800 transition-colors"
+                        >
+                          {item.link}
+                        </a>
+                      )}
+                    </td>
+                    <td className="py-3 px-4 text-right space-x-3">
                       {editingId === item.id ? (
                         <button
                           onClick={() => handleUpdate(item.id)}
-                          className="flex items-center bg-green-600 text-white px-2 py-1 rounded-full hover:bg-green-700"
+                          className="flex items-center gap-1 text-green-600 hover:text-green-800 transition-colors"
                         >
-                          <IoSaveOutline className="mr-1" />
+                          <IoSaveOutline size={20} />
                           Save
                         </button>
                       ) : (
                         <button
                           onClick={() => handleEdit(item)}
-                          className="flex items-center bg-blue-600 text-white px-2 py-1 rounded-full hover:bg-blue-700"
+                          className="flex items-center gap-1 text-blue-600 hover:text-blue-800 transition-colors"
                         >
-                          <FaRegEdit className="mr-1" />
+                          <FaRegEdit size={18} />
                           Edit
                         </button>
                       )}
                       <button
                         onClick={() => handleDelete(item.id)}
-                        className="flex items-center bg-red-600 text-white px-2 py-1 rounded-full hover:bg-red-700"
+                        className="flex items-center gap-1 text-red-600 hover:text-red-800 transition-colors"
                       >
-                        <MdOutlineDeleteOutline className="mr-1" />
+                        <MdOutlineDeleteOutline size={20} />
                         Delete
                       </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

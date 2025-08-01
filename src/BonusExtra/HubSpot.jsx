@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import robot from "../Images/GAI.png";
 import Star1 from "../Images/Star.png";
 import HeroSection from "../Component/HeroSection";
 import API_BASE_URL from "../Admin/utils/api";
+import { api } from "axiosApi";
 
 const HubSpot = () => {
   const [tools, setTools] = useState([]);
@@ -12,7 +12,7 @@ const HubSpot = () => {
   useEffect(() => {
     const fetchTools = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/hubspot`);
+        const response = await api.get(`/hubspot/gethubspot`);
         const data = response.data.data || [];
         // Parse options if it's a JSON string
         const formattedTools = data.map((tool) => ({

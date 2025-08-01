@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import API_BASE_URL from "../Admin/utils/api";
 import HeroSection from "../Component/HeroSection";
 import robot from "../Images/GAI.png";
 import Star1 from "../Images/Star.png";
+import { api } from "axiosApi";
 
 const GptGallery = () => {
   const [gpts, setGpts] = useState([]);
@@ -18,8 +17,8 @@ const GptGallery = () => {
   const fetchData = async () => {
     try {
       const [gptRes, catRes] = await Promise.all([
-        axios.get(`${API_BASE_URL}/api/gpt`),
-        axios.get(`${API_BASE_URL}/api/gpt-categories`),
+        api.get(`/gpt/getallgpts`),
+        api.get(`/gpt-categories/getgptcategories`),
       ]);
       setGpts(gptRes.data);
       setCategories(catRes.data);

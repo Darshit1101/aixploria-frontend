@@ -1,7 +1,6 @@
 import { useState } from "react";
-import axios from "axios";
-import API_BASE_URL from "../utils/api";
 import { useNavigate } from "react-router-dom";
+import { api } from "axiosApi";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("admin");
@@ -16,7 +15,7 @@ const LoginForm = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post(`${API_BASE_URL}/api/auth/login`, {
+      const res = await api.post(`/auth/login`, {
         username,
         password,
       });

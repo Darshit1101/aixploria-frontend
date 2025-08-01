@@ -1,9 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Search, Settings, ChevronDown, X } from "lucide-react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import API_BASE_URL from "../Admin/utils/api";
 import FeaturedCard from "./FeaturedCard";
+import { api } from "axiosApi";
 
 const NewAi = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -21,7 +20,7 @@ const NewAi = () => {
 
   const fetchTools = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/cards`);
+      const res = await api.get(`/cards/getallcards`);
       setTools(res.data);
     } catch (err) {
       console.error(err);
@@ -30,7 +29,7 @@ const NewAi = () => {
 
   const fetchCategories = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/categories`);
+      const res = await api.get(`/categories/getallcategories`);
       setCategories(["All Categories", ...res.data.map((c) => c.name)]);
     } catch (err) {
       console.error(err);
@@ -108,8 +107,20 @@ const NewAi = () => {
           {filtered.slice(0, 8).map((tool) => (
             <FeaturedCard
               key={tool.id}
-              {...tool}
-              free={tool.premiumtype === "Free"}
+              name={tool.name}
+              logo={
+                tool.image.startsWith("http") || tool.image.startsWith("https")
+                  ? tool.image
+                  : `https://${tool.image}`
+              }
+              description={tool.description}
+              ranking={tool.views}
+              verified={tool.verified}
+              websiteUrl={
+                tool.visitlink?.startsWith("http")
+                  ? tool.visitlink
+                  : `https://${tool.visitlink}`
+              }
             />
           ))}
         </div>

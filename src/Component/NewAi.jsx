@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Search, Settings, ChevronDown, X } from "lucide-react";
-import axios from "axios";
 import API_BASE_URL from "../Admin/utils/api";
 import FeaturedCard from "./FeaturedCard";
+import { api } from "axiosApi";
 
 const NewAi = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -22,10 +22,10 @@ const NewAi = () => {
 
   const fetchTools = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/cards`);
+      const res = await api.get(`/cards/getallcards`);
       const newTools = res.data.filter((tool) => tool.isNew === true);
       // setTools(newTools);
-      setTools(res.data)
+      setTools(res.data);
     } catch (err) {
       console.error("Failed to fetch tools", err);
     }
@@ -33,7 +33,7 @@ const NewAi = () => {
 
   const fetchCategories = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/categories`);
+      const res = await api.get(`/categories/getallcategories`);
       // Assuming response is array of { id, name }
       const catList = res.data.map((cat) => cat.name);
       setCategories(["All Categories", ...catList]);

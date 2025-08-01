@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import FeaturedCard from "../Component/FeaturedCard";
 import API_BASE_URL from "../Admin/utils/api";
+import { api } from "axiosApi";
 
 const PremiumResults = () => {
   const { type } = useParams();
@@ -13,7 +14,7 @@ const PremiumResults = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await axios.get(`${API_BASE_URL}/api/cards`);
+      const res = await api.get(`/cards/getallcards`);
       const tools = res.data;
 
       // Extract unique premium types

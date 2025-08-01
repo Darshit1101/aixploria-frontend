@@ -3,6 +3,9 @@ import axios from "axios";
 import API_BASE_URL from "../Admin/utils/api";
 import { ChevronUp } from "lucide-react";
 import { IoMdStar } from "react-icons/io";
+import { api } from "axiosApi";
+
+
 const AllTools = () => {
   const [toolsByCategory, setToolsByCategory] = useState({});
   const [loading, setLoading] = useState(true);
@@ -10,7 +13,7 @@ const AllTools = () => {
   useEffect(() => {
     const fetchTools = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/cards`);
+        const response = await api.get(`/cards/getallcards`);
         const grouped = groupByCategory(response.data);
         setToolsByCategory(grouped);
       } catch (error) {

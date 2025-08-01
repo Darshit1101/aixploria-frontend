@@ -2,6 +2,8 @@ import Arrow from "../Images/Arrow.png";
 import Ribbon from "../Images/Ribbon.png";
 import Check from "../Images/Check.png";
 import Star from "../Images/Star1.png";
+import DirectoryCard from '../Component/DirectoryCard'
+
 const directoryData = [
   {
     id: 1,
