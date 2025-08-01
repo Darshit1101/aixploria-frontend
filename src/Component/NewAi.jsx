@@ -24,7 +24,8 @@ const NewAi = () => {
     try {
       const res = await axios.get(`${API_BASE_URL}/api/cards`);
       const newTools = res.data.filter((tool) => tool.isNew === true);
-      setTools(newTools);
+      // setTools(newTools);
+      setTools(res.data)
     } catch (err) {
       console.error("Failed to fetch tools", err);
     }
@@ -60,7 +61,7 @@ const NewAi = () => {
   };
 
   // Filtered tools based on selected category
-  const filteredTools = tools.filter((tool) => {
+  const filteredTools = tools?.filter((tool) => {
     const matchesCategory =
       selectedCategory === "All Categories" ||
       tool.category?.toLowerCase() === selectedCategory.toLowerCase();
@@ -80,7 +81,10 @@ const NewAi = () => {
       <div className="w-full">
         <div className="flex p-5 bg-[#191919] flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
           {/* Search */}
-          <form onSubmit={handleSearch} className="w-full sm:w-auto flex-1 relative">
+          <form
+            onSubmit={handleSearch}
+            className="w-full sm:w-auto flex-1 relative"
+          >
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
@@ -122,9 +126,9 @@ const NewAi = () => {
             </button>
             {isDropdownOpen && (
               <div className="absolute z-20 mt-2 w-full max-h-60 overflow-y-auto bg-black border border-[#FF9D2D] rounded-lg shadow-xl">
-                {categories.map((category) => (
+                {categories?.map((category) => (
                   <button
-                    key={category}
+                    key={category.id}
                     onClick={() => handleCategorySelect(category)}
                     className="block w-full px-4 py-2 text-left hover:bg-gray-800 text-sm"
                   >
@@ -139,17 +143,24 @@ const NewAi = () => {
         {/* Grid of Tools */}
         <div className="px-4 sm:px-6 lg:px-8 mt-10 max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {filteredTools.map((tool) => (
+            {filteredTools?.map((tool) => (
               <FeaturedCard
                 key={tool.id}
                 name={tool.name}
-                logo={tool.logo}
+                logo={
+                  tool.image.startsWith("http") ||
+                  tool.image.startsWith("https")
+                    ? tool.image
+                    : `https://${tool.image}`
+                }
                 description={tool.description}
-                ranking={tool.ranking}
-                websiteUrl={tool.visitlink}
-                featured={tool.isFeatured}
-                verified={tool.isVerified}
-                hashtag={tool.hashtag}
+                ranking={tool.views}
+                verified={tool.verified}
+                websiteUrl={
+                  tool.visitlink?.startsWith("http")
+                    ? tool.visitlink
+                    : `https://${tool.visitlink}`
+                }
               />
             ))}
           </div>

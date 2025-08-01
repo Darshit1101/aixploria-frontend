@@ -48,6 +48,7 @@ const aiToolsData = [
     title: "Top 100 AI (beta)",
     description: "Top 100 most popular and trending AIs on Aixploria.",
     image: Top100,
+    link:"/top-100-ai"
   },
   {
     id: 5,
@@ -63,7 +64,7 @@ const aiToolsData = [
     image: Blog,
     link: "/blogs",
   },
-  {
+  { 
     id: 7,
     title: "Hugging Face Explorer",
     description: "Search for the best free “Spaces” available on Hugging Face",
@@ -82,48 +83,48 @@ const aiToolsData = [
     image: AIVideo,
     link: "/aitutorials",
   },
-  {
-    id: 10,
-    title: "Mini Free Apps",
-    description: "Explore a list of free, high-quality MCP servers.",
-    image: Mini,
-    isNew: true,
-  },
-  {
-    id: 11,
-    title: "AI Job Offers",
-    description:
-      "Discover the meaning of terms related to artificial intelligence.",
-    image: Job,
-  },
-  {
-    id: 12,
-    title: "AI Conference Agenda",
-    description:
-      "Watch live streams of the most important AI conferences and announcements.",
-    image: MCP,
-  },
   // {
   //   id: 10,
-  //   title: "MCP Servers List",
+  //   title: "Mini Free Apps",
   //   description: "Explore a list of free, high-quality MCP servers.",
-  //   image: MCP,
+  //   image: Mini,
   //   isNew: true,
   // },
   // {
   //   id: 11,
-  //   title: "AI Glossary",
+  //   title: "AI Job Offers",
   //   description:
   //     "Discover the meaning of terms related to artificial intelligence.",
-  //   image: AIGlossary,
+  //   image: Job,
   // },
   // {
   //   id: 12,
-  //   title: "Live Events",
+  //   title: "AI Conference Agenda",
   //   description:
   //     "Watch live streams of the most important AI conferences and announcements.",
-  //   image: Live,
+  //   image: MCP,
   // },
+  // // {
+  // //   id: 10,
+  // //   title: "MCP Servers List",
+  // //   description: "Explore a list of free, high-quality MCP servers.",
+  // //   image: MCP,
+  // //   isNew: true,
+  // // },
+  // // {
+  // //   id: 11,
+  // //   title: "AI Glossary",
+  // //   description:
+  // //     "Discover the meaning of terms related to artificial intelligence.",
+  // //   image: AIGlossary,
+  // // },
+  // // {
+  // //   id: 12,
+  // //   title: "Live Events",
+  // //   description:
+  // //     "Watch live streams of the most important AI conferences and announcements.",
+  // //   image: Live,
+  // // },
 ];
 
 const AICard = ({ title, description, image, isNew, link }) => {

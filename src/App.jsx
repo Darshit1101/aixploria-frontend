@@ -44,6 +44,7 @@ import BlogManager from "./Admin/Pages/Blog";
 import BlogList from "./BonusExtra/BlogList";
 import BlogDetail from "./BonusExtra/BlogDetail";
 import AllAITools from "./Component/AllAITools";
+import Top100AI from "./Component/Top100AI";
 
 const PublicLayout = ({ children }) => (
   <>
@@ -200,6 +201,14 @@ const App = () => {
           element={
             <PublicLayout>
               <AllAITools />
+            </PublicLayout>
+          }
+        />
+        <Route
+          path="/top-100-ai"
+          element={
+            <PublicLayout>
+              <Top100AI />
             </PublicLayout>
           }
         />

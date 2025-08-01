@@ -10,8 +10,8 @@ const FulllistPage = () => {
     <>
       <Fulllist />
       <TopTools />
-      {/* <AllTools/> */}
-      <FullListAi/>
+      <AllTools/>
+      {/* <FullListAi/>i8o */}
       <AboutAi/>
       {/* <AiProductivityTools/> */}
     </>

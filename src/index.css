@@ -18,7 +18,6 @@
   -webkit-text-fill-color: transparent;
 }
 
-
 /* Extra-thin orange scrollbar */
 .thin-orange-scrollbar {
   scrollbar-width: none;
@@ -45,10 +44,14 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #FA9021;
+  background-color: #fa9021;
   border-radius: 8px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
+}
+
+body{
+  background-color: black;
 }

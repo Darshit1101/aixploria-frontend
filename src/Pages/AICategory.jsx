@@ -4,13 +4,14 @@ import Search1 from '../Component/Search1'
 import AiCategoryAll from '../Component/AiCategoryAll'
 import AboutAi from '../Component/AboutAi'
 import TopTools from '../Component/TopTools'
+import AiProductivityTools from '../Component/AiProductivityTools'
 const Home = () => {
   return (
     <>
       <HeroScreen/>
       <TopTools />
       {/* <Search1/> */}
-      <AiCategoryAll/>
+      <AiProductivityTools/>
       <AboutAi/> 
     </>
   )

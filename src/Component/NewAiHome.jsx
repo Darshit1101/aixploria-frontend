@@ -17,9 +17,8 @@ const NewAiHome = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-
   return (
-    <>
+    <div>
       <HeroSection
         backgroundText="A I T O O L S"
         subtitle="Artificial intelligence for everyone"
@@ -31,7 +30,7 @@ const NewAiHome = () => {
         mainImage={robot}
         mainImageAlt="AI Assistant Robot"
       />
-    </>
+    </div>
   );
 };
 

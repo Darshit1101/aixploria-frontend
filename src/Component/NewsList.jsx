@@ -33,15 +33,15 @@ const NewAi = () => {
   };
 
   return (
-    <div className="bg-black w-full text-white">
-      <div className="bg-[#1f1f1f] font-[Poppins] rounded-2xl p-4 w-full max-w-7xl mx-auto shadow-lg">
-        <div className="h-[500px] overflow-y-auto custom-scrollbar pr-2">
+    <div className="bg-black w-full text-white ">
+      <div className="bg-[#1f1f1f] font-[Poppins] rounded-2xl p-4 w-full max-w-7xl mx-auto shadow-lg mt-2">
+        <div className="h-auto overflow-y-auto custom-scrollbar pr-2">
           {loading ? (
             <p className="text-gray-400 text-sm">Loading news...</p>
           ) : newsData.length === 0 ? (
             <p className="text-gray-400 text-sm">No news available.</p>
           ) : (
-            newsData.map((item, idx) => (
+            newsData?.map((item, idx) => (
               <a
                 key={item._id || idx}
                 href={item.link}
