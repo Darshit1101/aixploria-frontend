@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import API_BASE_URL from "../Admin/utils/api";
 import { ChevronUp } from "lucide-react";
 import { IoMdStar } from "react-icons/io";
 import { api } from "axiosApi";
-
 
 const AllTools = () => {
   const [toolsByCategory, setToolsByCategory] = useState({});
